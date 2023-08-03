@@ -1,0 +1,22 @@
+{
+  "name": "slight-tweaks",
+  "version": "1.0.0",
+  "description": "Additional methods for existing JavaScript objects.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpectralQuill/slight-tweaks.git"
+  },
+  "keywords": [
+    "JavaScript"
+  ],
+  "author": "Gian Tristian G. Apostol",
+  "license": "GPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/SpectralQuill/slight-tweaks/issues"
+  },
+  "homepage": "https://github.com/SpectralQuill/slight-tweaks#readme"
+}
