@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Additional methods for existing JavaScript objects.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/SpectralQuill/slight-tweaks/issues"
   },
-  "homepage": "https://github.com/SpectralQuill/slight-tweaks#readme"
+  "homepage": "https://github.com/SpectralQuill/slight-tweaks#readme",
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  }
 }
