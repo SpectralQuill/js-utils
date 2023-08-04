@@ -1,9 +1,18 @@
 type index = number;
 type possibleIndex = index | undefined;
 
+// bookmark: array
+
 interface Array<T> {
 
+    indexes(): index[];
     lastIndex(): possibleIndex;
+
+}
+
+Array.prototype.indexes = function() {
+
+    return this.map((_: any, index: string) => index);
 
 }
 
