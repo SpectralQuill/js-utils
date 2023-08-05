@@ -8,13 +8,14 @@ type indexCollection = index[] | Set<index>;
 type int = number;
 type possibleIndex = index | undefined;
 type possibleInfiniteAmt = number | true;
-type setGeneralBooleanCallbackFn = (element: element, set: Set<element>) => boolean;
+type setGeneralBooleanCallbackFn = (element: element, set: Set<element>, thisArg?: any) => boolean;
 
 // bookmark: collection
 
 interface Collection<T> {
 
     isEmpty(): boolean;
+    pick(exclude: collection): element;
 
 }
 
@@ -22,8 +23,8 @@ interface Collection<T> {
 
 interface Array<T> extends Collection<T> {
 
-    addElements(elements: collection, multiplier: int): index[]; //
-    count(elements: collection): amt; //
+    addElements(elements: collection, multiplier?: int): index[]; //
+    count(element: element): amt; //
     clear(): element[]; //
     deleteElements(
         elementsOrCallbackFn:
@@ -34,23 +35,22 @@ interface Array<T> extends Collection<T> {
                 deleted: element[]
             ) => boolean)
         ,
-        amt: possibleInfiniteAmt,
-        start: index,
-        end: index
+        amt?: possibleInfiniteAmt,
+        start?: index,
+        end?: index
     ): element[]; //
     firstElement(): element; //
-    firstIndex(positive: boolean): possibleIndex; //
-    indexes(positive: boolean): index[]; //
-    indexOfInt(positive: boolean): index; //
-    largest(exclude: collection): element; //
+    firstIndex(positive?: boolean): possibleIndex; //
+    indexes(positive?: boolean): index[]; //
+    indexOfInt(positive?: boolean): index; //
+    largest(exclude?: collection): element; //
     lastElement(): element; //
-    lastIndex(positive: boolean): possibleIndex; //
+    lastIndex(positive?: boolean): possibleIndex; //
     middleElement(): element; //
-    middleIndex(positive: boolean): possibleIndex; //
-    multiply(multiplier: int): index[]; //
-    randomElement(exclude: collection): element; //
-    randomIndex(exclude: indexCollection, positive: boolean): index; //
-    smallest(exclude: collection): element; //
+    middleIndex(positive?: boolean): possibleIndex; //
+    multiply(multiplier?: int): index[]; //
+    pickIndex(exclude?: indexCollection, positive?: boolean): index; //
+    smallest(exclude?: collection): element; //
 
 }
 
@@ -70,11 +70,21 @@ interface Set<T> extends Collection<T> {
             collection | ((element: element, set: this, deleted: Set<element>) => boolean)
     ): Set<element>; //
     difference(set: collection): Set<element>; //
-    every(callbackFn: setGeneralBooleanCallbackFn, thisArg: any): boolean; //
-    filter(callbackFn: setGeneralBooleanCallbackFn, thisArg: any): Set<element>; //
+    every(callbackFn: setGeneralBooleanCallbackFn, thisArg?: any): boolean; //
+    filter(callbackFn: setGeneralBooleanCallbackFn, thisArg?: any): Set<element>; //
     intersection(set: collection): Set<element>; //
-    some(callbackFn: setGeneralBooleanCallbackFn, thisArg: any): boolean; //
-    union(set: collection): Set<element> //
+    map(
+        callbackFn: (element: element, set: this, thisArg?: any) => element,
+        thisArg?: any
+    ): Set<element>; //
+    randomSubset(
+        limit: amt | ((subset: Set<T>, set: this) => boolean),
+        include?: Set<element>,
+        exclude?: Set<element>
+    ): Set<element>; //
+    some(callbackFn: setGeneralBooleanCallbackFn, thisArg?: any): boolean; //
+    toArray(shuffle?: boolean): Array<element>; //
+    union(set: collection): Set<element>; //
 
 }
 
