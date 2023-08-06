@@ -1,7 +1,9 @@
 interface Array<T> extends Collection<T> {
 
     addElements(elements: collection, multiplier?: int): index[]; //
-    count(base: element): amt;
+    count(elementOrCallbackFn: element | ((
+        element: element, index: index
+    ) => boolean)): amt;
     clear(): element[]; //
     deleteElements(
         elementsOrCallbackFn:
@@ -43,6 +45,6 @@ Array.prototype.count = function(base) {
 
 Array.prototype.isEmpty = function() {
 
-    return this.length == 0; /*aaaa*/
+    return this.length == 0;
 
 }

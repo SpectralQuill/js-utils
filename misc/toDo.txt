@@ -1,0 +1,7 @@
+learn about bind
+
+array methods:
+    use match as parameter name
+    lastElement to just last
+        last(match) default lastIndex
+    middle is .5 that can be adjusted

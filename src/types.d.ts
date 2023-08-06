@@ -1,15 +1,16 @@
 type addend = number;
 type amt = number;
-type collection = element[] | Set<element>;
+type array = any[];
+type arrayGeneralBooleanCallbackFn = (element: element, index: index, array: array) => boolean;
+type collection = array | set;
 type element = any;
 type index = number;
 type indexCollection = index[] | Set<index>;
 type int = number;
 type possibleIndex = index | undefined;
 type possibleInfiniteAmt = number | true;
-type setGeneralBooleanCallbackFn =
-    (element: element, set: Set<element>, thisArg?: any) => boolean
-;
+type set = Set<element>;
+type setGeneralBooleanCallbackFn = (element: element, set: set) => boolean;
 
 interface Collection<T> {
 
