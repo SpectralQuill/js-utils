@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "typeRoots": ["src"],
+    "outFile": "./index.js",
+    "removeComments": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

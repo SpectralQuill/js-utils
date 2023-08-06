@@ -1,7 +1,6 @@
 type addend = number;
 type amt = number;
 type collection = element[] | Set<element>;
-type count = number;
 type element = any;
 type index = number;
 type indexCollection = index[] | Set<index>;
@@ -24,7 +23,7 @@ interface Collection<T> {
 interface Array<T> extends Collection<T> {
 
     addElements(elements: collection, multiplier?: int): index[]; //
-    count(element: element): amt; //
+    count(base: element): amt;
     clear(): element[]; //
     deleteElements(
         elementsOrCallbackFn:
@@ -51,6 +50,16 @@ interface Array<T> extends Collection<T> {
     multiply(multiplier?: int): index[]; //
     pickIndex(exclude?: indexCollection, positive?: boolean): index; //
     smallest(exclude?: collection): element; //
+
+}
+
+Array.prototype.count = function(base) {
+
+    const amt: amt = this.reduce(
+        (amt: amt, element: element) => amt + (base == element ? 1 : 0),
+        0
+    );
+    return amt;
 
 }
 
@@ -90,6 +99,6 @@ interface Set<T> extends Collection<T> {
 
 Set.prototype.isEmpty = function() {
 
-    return this.size == 0;
+    return this.size == 0; /*sss*/ // jkki
 
 }
