@@ -1,3 +1,4 @@
+type whatevs = any;
 type addend = number;
 type amt = number;
 type array = any[];
