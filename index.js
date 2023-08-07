@@ -4,7 +4,7 @@ Array.prototype.count = function (base) {
     return amt;
 };
 Array.prototype.isEmpty = function () {
-    return this.length == 0; /*aaaa*/
+    return this.length == 0;
 };
 Set.prototype.isEmpty = function () {
     return this.size == 0;
