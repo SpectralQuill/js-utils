@@ -2,7 +2,8 @@
   "name": "js-utils",
   "version": "1.0.0",
   "description": "Additional methods for existing JavaScript objects.",
-  "main": "index.js",
+  "main": "index.ts",
+  "type": "module",
   "scripts": {
     "compile": "npx tsc",
     "compileTest": "npx tsc test.ts",

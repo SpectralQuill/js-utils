@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "module": "CommonJS",
     "strict": true,
     "skipLibCheck": true,
-    "outFile": "./index.js",
-    "removeComments": true
+    "noEmit": true
   },
-  "include": ["src", "index.d.ts"],
-  "exclude": ["misc", "node_modules"]
+  "exclude": ["node_modules", "misc"]
 }

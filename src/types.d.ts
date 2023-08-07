@@ -1,17 +1,14 @@
-type whatevs = any;
 type addend = number;
 type amt = number;
-type array = any[];
-type arrayGeneralBooleanCallbackFn = (element: element, index: index, array: array) => boolean;
-type collection = array | set;
+type arrayGeneralBooleanCallbackFn = (element: element, index: index, array: element[]) => boolean;
+type collection = element[] | Set<element>;
 type element = any;
 type index = number;
 type indexCollection = index[] | Set<index>;
 type int = number;
 type possibleIndex = index | undefined;
 type possibleInfiniteAmt = number | true;
-type set = Set<element>;
-type setGeneralBooleanCallbackFn = (element: element, set: set) => boolean;
+type setGeneralBooleanCallbackFn = (element: element, set: Set<element>) => boolean;
 
 interface Collection<T> {
 
@@ -78,5 +75,11 @@ interface Set<T> extends Collection<T> {
     some(callbackFn: setGeneralBooleanCallbackFn, thisArg?: any): boolean; //
     toArray(shuffle?: boolean): Array<element>; //
     union(set: collection): Set<element>; //
+
+}
+
+interface arrayInterface {
+
+    count(): amt
 
 }
