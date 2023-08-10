@@ -1,20 +1,15 @@
 {
-  "name": "js-utils",
+  "name": "ts-datatype-utils",
   "version": "1.0.0",
-  "description": "Additional methods for existing JavaScript objects.",
+  "description": "Utilities for JavaScript objects and types.",
   "main": "index.ts",
   "type": "module",
-  "scripts": {
-    "compile": "npx tsc",
-    "compileTest": "npx tsc test.ts",
-    "test": "node test.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SpectralQuill/js-utils.git"
   },
   "keywords": [
-    "JavaScript"
+    "typescript"
   ],
   "author": "Gian Tristian G. Apostol",
   "license": "GPL-3.0-only",
