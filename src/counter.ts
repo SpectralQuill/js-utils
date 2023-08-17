@@ -1,8 +1,7 @@
 module Counter {
     
     export type callback<R> = (value: number, start: number, period: number) => R;
-    export type condition = boolean | Counter.conditionCallback;
-    export type conditionCallback = Counter.callback<boolean>;
+    export type condition = boolean | Counter.callback<boolean>;
 
 }
 
@@ -10,13 +9,13 @@ export default class Counter {
 
     private static makeConditionCallbackFn(
         condition: Counter.condition
-    ): Counter.conditionCallback {
+    ): Counter.callback<boolean> {
 
         return condition instanceof Function ? condition : (() => condition);
 
     }
 
-    public condition: Counter.conditionCallback;
+    public condition: Counter.callback<boolean>;
 
     public constructor(
         public start: number = 0,
@@ -28,13 +27,13 @@ export default class Counter {
 
     }
 
-    [Symbol.iterator](): Generator<number> {
+    public [Symbol.iterator](): Generator<number, number> {
 
         return this.iterate();
 
     }
 
-    *iterate() {
+    public * iterate(): Generator<number, number> {
 
         const { start, period } = this;
         let value = start;
@@ -44,6 +43,7 @@ export default class Counter {
             value += period;
 
         }
+        return value;
     
     }
 
