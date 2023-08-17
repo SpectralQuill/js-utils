@@ -1,10 +1,16 @@
+module NumberUtils {
+
+    export type generalCallback<R> = (number: number) => R;
+
+}
+
 export default class NumberUtils {
 
-    static execute<R>(
+    public static execute<R>(
         number: number,
-        positive: (number: number) => R,
-        negative: (number: number) => R,
-        zero: (number: number) => R
+        positive: NumberUtils.generalCallback<R>,
+        negative: NumberUtils.generalCallback<R>,
+        zero: NumberUtils.generalCallback<R>
     ): R {
 
         const { isNegative, isPositive } = NumberUtils;
@@ -16,36 +22,43 @@ export default class NumberUtils {
 
     }
 
-    static isNegative(number: number): boolean {
+    public static getDecimalPlaces(number: number): number {
+
+        const string: string = number.toString();
+        const length: int = string.length;
+        const decimalIndex: index = string.indexOf(".");
+        return decimalIndex > -1 ? (length - decimalIndex - 1) : 0;
+
+    }
+
+    public static isNegative(number: number): boolean {
 
         return number < 0;
 
     }
 
-    static isPositive(number: number): boolean {
+    public static isPositive(number: number): boolean {
 
         return number > 0;
 
     }
 
-    static isZero(number: number): boolean {
+    public static isZero(number: number): boolean {
 
         return number == 0;
 
     }
 
-    static inRange(
-        number: number,
-        start: number = 0,
-        end: number,
-        includeStart: boolean = true,
-        includeEnd: boolean = true
-    ): boolean {
+    public static mostDecimalPlaces(collection: collection<number>): number {
 
-        return (
-            (includeStart ? number >= start : number > start) &&
-            (includeEnd ? number <= end : number < end)
-        );
+        let mostDecimalPlaces: int = 0;
+        collection.forEach(number => {
+
+            const decimalPlaces: int = NumberUtils.getDecimalPlaces(number);
+            if(decimalPlaces > mostDecimalPlaces) mostDecimalPlaces = decimalPlaces;
+
+        });
+        return mostDecimalPlaces;
 
     }
 

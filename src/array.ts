@@ -1,48 +1,93 @@
+import BooleanUtils from "./booleanUtils";
 import CollectionUtils from "./collection";
 import NumberUtils from "./number";
+import Range from "./range";
 
 module ArrayUtils {
 
-    export type generalBooleanCallback = (element: any, index: index, array: any[]) => boolean;
-    export type indexCallback = oneArgBooleanCallback<index>;
+    export type callback<T, R> = (element: T, index: index, array: T[]) => R;
+    export type match<T> = T | ArrayUtils.callback<T, boolean>;
 
 }
 
 export default class ArrayUtils {
 
-    static hasIndex<T>(array: T[], index: index): boolean {
+    // count, delete, indexes (start)
+    // multiply should take decimals as well
 
-        const { length } = array;
-        const positiveIndex: index = NumberUtils.isNegative(index) ? length + index : index;
-        return NumberUtils.inRange(positiveIndex, 0, length, true, false);
+    private static makeMatchFn<T>(
+        match: ArrayUtils.match<T>
+    ): ArrayUtils.callback<T, boolean> {
+
+        return match instanceof Function ? match : (element => element == match);
 
     }
 
-    static indexes<T>(
+    public static count<T>(array: T[], match: ArrayUtils.match<T>): number {
+
+        const check: ArrayUtils.match<T> = ArrayUtils.makeMatchFn<T>(match);
+        const count: number = array.reduce((count, element, index) => {
+
+            if(check(element, index, array)) count++;
+            return count;
+
+        }, 0);
+        return count;
+
+    }
+
+    public static delete<T>(array: T[], match: ArrayUtils.match<T>): T[] {
+
+        const check: ArrayUtils.match<T> = ArrayUtils.makeMatchFn<T>(match);
+        const deleted: T[] = [];
+        for(let index: index = 0; index < array.length;) {
+
+            const element = array[index];
+            if(check(element, index, array)) {
+
+                array.splice(index, 1);
+                deleted.push(element);
+
+            }else index++
+
+        }
+        return deleted;
+
+    }
+
+    public static hasIndex<T>(array: T[], index: index): boolean {
+
+        if(CollectionUtils.isEmpty(array)) return false;
+        const { length } = array;
+        const positive: index = NumberUtils.isNegative(index) ? length + index : index;
+        const range: Range = new Range(0, length, true, false);
+        return range.inRange(positive);
+
+    }
+
+    public static indexes<T>(
         array: T[],
-        excludeElements: collection<T>,
-        excludeIndexes: collection<index>,
+        callback?: ArrayUtils.callback<T, boolean>,
         positive: boolean = true
     ): index[] {
 
-        type elementCallback = oneArgBooleanCallback<T>;
-        type indexCallback = ArrayUtils.indexCallback;
-        
-        const elementExcluded: elementCallback = CollectionUtils.execute<T, elementCallback>(
-            excludeElements,
-            (array: T[]) => (element: T) => array.includes(element),
-            (set: Set<T>) => (element: T) => set.has(element)
-        );
-        const indexExcluded: indexCallback = CollectionUtils.execute<index, indexCallback>(
-            excludeIndexes,
-            (array: index[]) => (index: index) => array.includes(index),
-            (set: Set<index>) => (index: index) => set.has(index)
-        );
-        const indexes: index[] = array.reduce((indexes: index[], element: T, index: index) => {
+        const check: ArrayUtils.callback<T, boolean> =
+            callback instanceof Function ? callback :
+            BooleanUtils.returnTrue
+        ;
+        const negative: boolean = !positive;
+        let indexes: index[] = array.reduce((indexes: index[], element, index) => {
 
-            if(!elementExcluded(element) && !indexExcluded(index)) {
+            if(check(element, index, array)) {
+
+                if(negative) {
+                    
+                    const negativeIndex: canBeUndefined<index> =
+                        ArrayUtils.negativeIndexOfInt(array, index)
+                    ;
+                    if(negativeIndex !== undefined) index = negativeIndex;
                 
-                index = this.indexOfInt(array, index, positive);
+                }
                 indexes.push(index);
 
             }
@@ -53,19 +98,56 @@ export default class ArrayUtils {
 
     }
 
-    static indexOfInt<T>(array: T[], int: int, positive: boolean = true): index {
+    public static insert<T>(array: T[], add: T[], index: index = array.length): length {
 
-        const inArray: boolean = this.hasIndex(array, int);
-        if(!inArray) return -1;
-
+        array.splice(index, 0, ...add);
         const { length } = array;
-        const positiveIndex: index = NumberUtils.isNegative(int) ? length + int : int;
-        const negativeIndex: index = -length + positiveIndex;
-        return positive ? positiveIndex : negativeIndex;
+        return length;
 
     }
 
-    // static deleteElements() {}
+    public static indexOfInt<T>(array: T[], int: int): canBeUndefined<index> {
+
+        const inArray: boolean = this.hasIndex(array, int);
+        const { length } = array;
+        const index: canBeUndefined<index> =
+            inArray ? (NumberUtils.isNegative(int) ? length + int : int) : undefined
+        ;
+        return index;
+
+    }
+
+    public static multiply<T>(array: T[], multiplier: int): length {
+
+        const end: int = Math.abs(multiplier);
+        for(let count: int = 1; count < end; count++) {
+
+            array.push(...array);
+
+        }
+        if(NumberUtils.isNegative(multiplier)) array.reverse();
+        const { length } = array;
+        return length;
+
+    }
+
+    public static negativeIndexOfInt<T>(array: T[], int: int): canBeUndefined<index> {
+
+        const { length } = array;
+        const inArray: boolean = this.hasIndex(array, int);
+        const index: canBeUndefined<index> =
+            inArray ? (NumberUtils.isNegative(int) ? int : (int - length)) : (-length - 1)
+        ;
+        return index;
+
+    }
+
+
+
+
+
+
+
 
     // static deleteIndexes() {}
 

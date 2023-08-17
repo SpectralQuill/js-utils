@@ -1,10 +1,20 @@
-type callback<R> = () => R;
 type canBeTrue<T> = T | true;
 type canBeUndefined<T> = T | undefined;
 type collection<T> = T[] | Set<T>;
 type index = int;
 type int = number;
-type oneArgBooleanCallback<T> = (arg: T) => boolean;
+type length = number;
+type noArgCallback<R> = () => R;
+
+/*
+
+    array methods:
+        rename addElements to insert
+        lastElement to just last
+            last(match) default lastIndex
+        middle is .5 that can be adjusted
+
+*/
 
 // interface Collection<T> {
 

@@ -1,8 +1,0 @@
-learn about bind
-
-array methods:
-    rename addElements to insert
-    use match as parameter name
-    lastElement to just last
-        last(match) default lastIndex
-    middle is .5 that can be adjusted

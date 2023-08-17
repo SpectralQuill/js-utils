@@ -1,6 +1,6 @@
 module SetUtils {
 
-    export type generalBooleanCallback = (element: any, set: Set<any>) => boolean;
+    export type generalCallback<T, R> = (element: T, set: Set<T>) => R;
 
 }
 
