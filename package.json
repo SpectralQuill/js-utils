@@ -1,5 +1,5 @@
 {
-  "name": "ts-datatype-utils",
+  "name": "ts-utils",
   "version": "1.0.0",
   "description": "Utilities for JavaScript objects and types.",
   "main": "index.ts",
