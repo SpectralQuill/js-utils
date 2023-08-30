@@ -6,6 +6,11 @@ module SetUtils {
 
 export default class SetUtils {
 
+    /*
+
+        To add:
+            getRandom()
     
+    */
 
 }

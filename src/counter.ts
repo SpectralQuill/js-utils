@@ -7,7 +7,7 @@ module Counter {
 
 export default class Counter {
 
-    private static makeConditionCallbackFn(
+    private static makeConditionFn(
         condition: Counter.condition
     ): Counter.callback<boolean> {
 
@@ -23,7 +23,7 @@ export default class Counter {
         condition: Counter.condition = true
     ) {
 
-        this.condition = Counter.makeConditionCallbackFn(condition);
+        this.condition = Counter.makeConditionFn(condition);
 
     }
 

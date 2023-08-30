@@ -1,5 +1,6 @@
 import BooleanUtils from "./booleanUtils";
 import CollectionUtils from "./collection";
+import Counter from "./counter";
 import NumberUtils from "./number";
 import Range from "./range";
 
@@ -23,15 +24,39 @@ export default class ArrayUtils {
 
     }
 
-    public static count<T>(array: T[], match: ArrayUtils.match<T>): number {
+    // public static count<T>(array: T[], match: ArrayUtils.match<T>): number {
 
-        const check: ArrayUtils.match<T> = ArrayUtils.makeMatchFn<T>(match);
-        const count: number = array.reduce((count, element, index) => {
+    //     const check: ArrayUtils.match<T> = ArrayUtils.makeMatchFn<T>(match);
+    //     const count: number = array.reduce((count, element, index) => {
 
+    //         if(check(element, index, array)) count++;
+    //         return count;
+
+    //     }, 0);
+    //     return count;
+
+    // }
+
+    public static count<T>(array: T[], match: ArrayUtils.match<T>, start: number = 0): number {
+
+        const { length } = array;
+        if(length == 0) return 0;
+        const forward: boolean = !NumberUtils.isNegative(start);
+        const period: int = forward ? 1 : -1;
+        const negativeFirstIndex: index = this.negativeIndexOfInt(array, 0) as number;
+        const condition: (value: number) => boolean =
+            forward ? (value => value < length) :
+            (value => value < negativeFirstIndex)
+        ;
+        const iterator: Counter = new Counter(start, period, condition);
+        const check: ArrayUtils.callback<T, boolean> = ArrayUtils.makeMatchFn<T>(match);
+        let count: int = 0;
+        for(let index of iterator) {
+
+            const element: T = array.at(index) as T;
             if(check(element, index, array)) count++;
-            return count;
 
-        }, 0);
+        };
         return count;
 
     }
@@ -52,6 +77,13 @@ export default class ArrayUtils {
 
         }
         return deleted;
+
+    }
+
+    public static firstIndex<T>(array: T[]): canBeUndefined<index> {
+
+        const { length } = array;
+        return length == 0 ? undefined : 0;
 
     }
 
@@ -114,6 +146,13 @@ export default class ArrayUtils {
             inArray ? (NumberUtils.isNegative(int) ? length + int : int) : undefined
         ;
         return index;
+
+    }
+
+    public static lastIndex<T>(array: T[]): canBeUndefined<index> {
+
+        const { length } = array;
+        return length == 0 ? undefined : (length - 1);
 
     }
 
