@@ -36,10 +36,9 @@ export default class ArrayUtils {
         const forward: boolean = !NumberUtils.isNegative(start);
         const period: int = forward ? 1 : -1;
         const negativeFirstIndex: index = this.negativeIndexOfInt(array, 0) as number;
-        console.log(negativeFirstIndex);
         const condition: (value: number) => boolean =
             forward ? (value => value < length) :
-            (value => value < negativeFirstIndex)
+            (value => value > negativeFirstIndex)
         ;
         const iterator: Counter = new Counter(start, period, condition);
         let count: int = 0;
