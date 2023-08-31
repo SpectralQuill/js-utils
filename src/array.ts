@@ -13,32 +13,11 @@ module ArrayUtils {
 
 export default class ArrayUtils {
 
-    // count, delete, indexes (start)
+    // delete, indexes (start)
     // multiply should take decimals as well
-    // iterateFrom(index: int)
+    // hasIndex -> change: this should only work with integers
 
-    public static count<T>(array: T[], match: ArrayUtils.match<T>, start: number = 0): number {
-
-        // simplify with iterateFrom()
-
-        // const { length } = array;
-        // if(length == 0) return 0;
-        // const forward: boolean = !NumberUtils.isNegative(start);
-        // const period: int = forward ? 1 : -1;
-        // const negativeFirstIndex: index = this.negativeIndexOfInt(array, 0) as number;
-        // const condition: (value: number) => boolean =
-        //     forward ? (value => value < length) :
-        //     (value => value > negativeFirstIndex)
-        // ;
-        // const iterator: Counter = new Counter(start, period, condition);
-        // let count: int = 0;
-        // for(let index of iterator) {
-
-        //     const element: T = array.at(index) as T;
-        //     if(match(element, index, array)) count++;
-
-        // };
-        // return count;
+    public static count<T>(array: T[], match: ArrayUtils.match<T>, start: index = 0): number {
 
         let count: int = 0;
         this.iterateFrom(array, start, (element, index) => {
@@ -50,21 +29,36 @@ export default class ArrayUtils {
 
     }
 
-    public static delete<T>(array: T[], match: ArrayUtils.match<T>): T[] {
+    public static delete<T>(array: T[], match: ArrayUtils.match<T>, start: index = 0): T[] {
 
         // start parameter
-        const deleted: T[] = [];
-        for(let index: index = 0; index < array.length;) {
 
-            const element = array[index];
+        // const deleted: T[] = [];
+        // for(let index: index = 0; index < array.length;) {
+
+        //     const element = array[index];
+        //     if(match(element, index, array)) {
+
+        //         array.splice(index, 1);
+        //         deleted.push(element);
+
+        //     }else index++
+
+        // }
+        // return deleted;
+
+        const deleted: T[] = [];
+        this.iterateFrom(array, start, (element, index) => {
+
             if(match(element, index, array)) {
 
                 array.splice(index, 1);
                 deleted.push(element);
+                return 0;
 
-            }else index++
+            }
 
-        }
+        });
         return deleted;
 
     }
@@ -78,7 +72,6 @@ export default class ArrayUtils {
 
     public static hasIndex<T>(array: T[], index: index): boolean {
         
-        // change: this should only work with integers
         const { length } = array;
         if(length == 0) return false;
         const positive: index = NumberUtils.isNegative(index) ? length + index : index;
@@ -93,7 +86,6 @@ export default class ArrayUtils {
         positive: boolean = true
     ): index[] {
 
-        // start parameter
         const check: ArrayUtils.callback<T, boolean> =
             callback instanceof Function ? callback :
             BooleanUtils.returnTrue
@@ -142,26 +134,39 @@ export default class ArrayUtils {
 
     public static iterateFrom<T>(array: T[], start: index, callback: ArrayUtils.callback<T, any>): int {
 
-        const { length } = array;
-        const negativeFirstIndex: index = this.negativeIndexOfInt(array, 0) as number;
         let count: int = 0;
-
         const forward: boolean = !NumberUtils.isNegative(start);
         const period: int = forward ? 1 : -1;
         const condition: (value: number) => boolean =
-            forward ? value => (value < length) :
-            value => (value > negativeFirstIndex)
+            forward ? value => (value < array.length) :
+            value => {
+                
+                const negativeFirstIndex: index = this.negativeIndexOfInt(array, 0) as number;
+                return value > negativeFirstIndex;
+
+            }
         ;
         const iterator: Counter = new Counter(start, period, condition);
+        let tempPeriod: canBeUndefined<int>;
 
-        for(let index of iterator) {
+        for(let index of iterator.iterate()) {
 
-            const element: T = array.at(index) as T;
+            if(tempPeriod !== undefined) {
+
+                iterator.period = period;
+                tempPeriod = undefined;
+
+            }
+
+            index = this.indexOfInt(array, index) as index;
+            const element: T = array[index];
             const returnValue = callback(element, index, array);
             count++;
 
-            if(returnValue === true) continue;
-            else if(returnValue === false) break;
+            if(returnValue === false) break;
+            else if(NumberUtils.isNumber(returnValue)) tempPeriod = returnValue;
+
+            if(tempPeriod !== undefined) iterator.period = tempPeriod;
 
         }
 

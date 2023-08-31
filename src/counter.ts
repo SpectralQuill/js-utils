@@ -21,12 +21,12 @@ export default class Counter {
 
     public * iterate(): Generator<number, number> {
 
-        const { start, period } = this;
+        const { start } = this;
         let value = start;
-        while(this.condition(value, start, period)) {
+        while(this.condition(value, start, this.period)) {
 
             yield value;
-            value += period;
+            value += this.period;
 
         }
         return value;
