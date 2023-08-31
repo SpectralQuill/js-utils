@@ -1,6 +1,6 @@
 module CollectionUtils {
 
-    export type elementCallback<T, R> = (element: T) => R;
+    
 
 }
 

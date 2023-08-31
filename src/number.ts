@@ -1,6 +1,6 @@
 module NumberUtils {
 
-    export type generalCallback<R> = (number: number) => R;
+    export type callback<R> = (number: number) => R;
 
 }
 
@@ -8,9 +8,9 @@ export default class NumberUtils {
 
     public static execute<R>(
         number: number,
-        positive: NumberUtils.generalCallback<R>,
-        negative: NumberUtils.generalCallback<R>,
-        zero: NumberUtils.generalCallback<R>
+        positive: NumberUtils.callback<R>,
+        negative: NumberUtils.callback<R>,
+        zero: NumberUtils.callback<R>
     ): R {
 
         const { isNegative, isPositive } = NumberUtils;
