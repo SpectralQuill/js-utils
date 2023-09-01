@@ -13,9 +13,10 @@ module ArrayUtils {
 
 export default class ArrayUtils {
 
-    // delete, indexes (start)
+    // indexes (start)
     // multiply should take decimals as well
     // hasIndex -> change: this should only work with integers
+    // iterteFrom() works but try to simplify more
 
     public static count<T>(array: T[], match: ArrayUtils.match<T>, start: index = 0): number {
 
@@ -30,22 +31,6 @@ export default class ArrayUtils {
     }
 
     public static delete<T>(array: T[], match: ArrayUtils.match<T>, start: index = 0): T[] {
-
-        // start parameter
-
-        // const deleted: T[] = [];
-        // for(let index: index = 0; index < array.length;) {
-
-        //     const element = array[index];
-        //     if(match(element, index, array)) {
-
-        //         array.splice(index, 1);
-        //         deleted.push(element);
-
-        //     }else index++
-
-        // }
-        // return deleted;
 
         const deleted: T[] = [];
         this.iterateFrom(array, start, (element, index) => {
@@ -80,35 +65,43 @@ export default class ArrayUtils {
 
     }
 
-    public static indexes<T>(
-        array: T[],
-        callback?: ArrayUtils.callback<T, boolean>,
-        positive: boolean = true
-    ): index[] {
+    // public static indexes<T>(
+    //     array: T[],
+    //     callback?: ArrayUtils.callback<T, boolean>,
+    //     positive: boolean = true
+    // ): index[] {
 
-        const check: ArrayUtils.callback<T, boolean> =
-            callback instanceof Function ? callback :
-            BooleanUtils.returnTrue
-        ;
-        const negative: boolean = !positive;
-        let indexes: index[] = array.reduce((indexes: index[], element, index) => {
+    //     const check: ArrayUtils.callback<T, boolean> =
+    //         callback instanceof Function ? callback :
+    //         BooleanUtils.returnTrue
+    //     ;
+    //     const negative: boolean = !positive;
+    //     let indexes: index[] = array.reduce((indexes: index[], element, index) => {
 
-            if(check(element, index, array)) {
+    //         if(check(element, index, array)) {
 
-                if(negative) {
+    //             if(negative) {
                     
-                    const negativeIndex: canBeUndefined<index> =
-                        ArrayUtils.negativeIndexOfInt(array, index)
-                    ;
-                    if(negativeIndex !== undefined) index = negativeIndex;
+    //                 const negativeIndex: canBeUndefined<index> =
+    //                     ArrayUtils.negativeIndexOfInt(array, index)
+    //                 ;
+    //                 if(negativeIndex !== undefined) index = negativeIndex;
                 
-                }
-                indexes.push(index);
+    //             }
+    //             indexes.push(index);
 
-            }
-            return indexes;
+    //         }
+    //         return indexes;
 
-        }, []);
+    //     }, []);
+    //     return indexes;
+
+    // }
+
+    public static indexes<T>(array: T[], start: index = 0): index[] {
+
+        const indexes: index[] = [];
+        this.iterateFrom(array, start, (_, index) => indexes.push(index));
         return indexes;
 
     }
