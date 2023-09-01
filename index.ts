@@ -1,7 +1,7 @@
 import ArrayUtils from "./src/array";
 export { ArrayUtils };
 
-import BooleanUtils from "./src/booleanUtils";
+import BooleanUtils from "./src/boolean";
 export { BooleanUtils };
 
 import CollectionUtils from "./src/collection";

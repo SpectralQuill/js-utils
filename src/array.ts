@@ -1,4 +1,4 @@
-import BooleanUtils from "./booleanUtils";
+import BooleanUtils from "./boolean";
 import CollectionUtils from "./collection";
 import Counter from "./counter";
 import NumberUtils from "./number";
@@ -65,43 +65,14 @@ export default class ArrayUtils {
 
     }
 
-    // public static indexes<T>(
-    //     array: T[],
-    //     callback?: ArrayUtils.callback<T, boolean>,
-    //     positive: boolean = true
-    // ): index[] {
-
-    //     const check: ArrayUtils.callback<T, boolean> =
-    //         callback instanceof Function ? callback :
-    //         BooleanUtils.returnTrue
-    //     ;
-    //     const negative: boolean = !positive;
-    //     let indexes: index[] = array.reduce((indexes: index[], element, index) => {
-
-    //         if(check(element, index, array)) {
-
-    //             if(negative) {
-                    
-    //                 const negativeIndex: canBeUndefined<index> =
-    //                     ArrayUtils.negativeIndexOfInt(array, index)
-    //                 ;
-    //                 if(negativeIndex !== undefined) index = negativeIndex;
-                
-    //             }
-    //             indexes.push(index);
-
-    //         }
-    //         return indexes;
-
-    //     }, []);
-    //     return indexes;
-
-    // }
-
     public static indexes<T>(array: T[], start: index = 0): index[] {
 
         const indexes: index[] = [];
-        this.iterateFrom(array, start, (_, index) => indexes.push(index));
+        this.iterateFrom(array, start, (_, index) => {
+
+            indexes.push(index);
+
+        });
         return indexes;
 
     }
