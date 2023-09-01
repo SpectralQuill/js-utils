@@ -6,8 +6,8 @@ import Range from "./range";
 
 module ArrayUtils {
 
-    export type callback<T, R> = (element: T, index: index, array: T[]) => R;
-    export type match<T> = ArrayUtils.callback<T, boolean>;
+    export type callbackEach<T, R> = (element: T, index: index, array: T[]) => R;
+    export type match<T> = ArrayUtils.callbackEach<T, boolean>;
 
 }
 
@@ -17,6 +17,7 @@ export default class ArrayUtils {
     // hasIndex -> change: this should only work with integers
     // iterateFrom() works but try to simplify more
     // iterateFrom(): when number is returned, add it to count instead of making tempPeriod
+    // iterateFrom callback should be optional
 
     public static count<T>(array: T[], match: ArrayUtils.match<T>, start: index = 0): number {
 
@@ -39,7 +40,7 @@ export default class ArrayUtils {
 
                 array.splice(index, 1);
                 deleted.push(element);
-                return 0;
+                return -1;
 
             }
 
@@ -85,55 +86,77 @@ export default class ArrayUtils {
 
     }
 
-    public static indexOfInt<T>(array: T[], int: int): canBeUndefined<index> {
+    // public static iterateFrom<T>(array: T[], start: index, callback: ArrayUtils.callbackEach<T, any>): int {
 
-        const inArray: boolean = this.hasIndex(array, int);
-        const { length } = array;
-        const index: canBeUndefined<index> =
-            inArray ? (NumberUtils.isNegative(int) ? length + int : int) : undefined
-        ;
-        return index;
+    //     let count: int = 0;
+        // const forward: boolean = !NumberUtils.isNegative(start);
+        // const period: int = forward ? 1 : -1;
+        // const condition: (value: number) => boolean =
+        //     forward ? value => (value < array.length) :
+        //     value => {
+                
+        //         const negativeFirstIndex: index = this.negativeIndex(array, 0) as number;
+        //         return value > negativeFirstIndex;
 
-    }
+        //     }
+        // ;
+        // const iterator: Counter = new Counter(start, period, condition);
+        // let tempPeriod: canBeUndefined<int>;
 
-    public static iterateFrom<T>(array: T[], start: index, callback: ArrayUtils.callback<T, any>): int {
+        // for(let index of iterator.iterate()) {
+
+        //     if(tempPeriod !== undefined) {
+
+        //         iterator.period = period;
+        //         tempPeriod = undefined;
+
+        //     }
+
+        //     index = this.positiveIndex(array, index) as index;
+        //     const element: T = array[index];
+        //     const returnValue = callback(element, index, array);
+        //     count++;
+
+        //     if(returnValue === false) break;
+        //     else if(NumberUtils.isNumber(returnValue)) tempPeriod = returnValue;
+
+        //     if(tempPeriod !== undefined) iterator.period = tempPeriod;
+
+        // }
+
+    //     return count;
+
+    // }
+
+    public static iterateFrom<T>(
+        array: T[],
+        start: index,
+        callbackEach: ArrayUtils.callbackEach<T, unknown>
+    ): int {
 
         let count: int = 0;
+        if(CollectionUtils.isEmpty(array)) return count;
         const forward: boolean = !NumberUtils.isNegative(start);
         const period: int = forward ? 1 : -1;
-        const condition: (value: number) => boolean =
-            forward ? value => (value < array.length) :
-            value => {
-                
-                const negativeFirstIndex: index = this.negativeIndex(array, 0) as number;
-                return value > negativeFirstIndex;
+        const counter = new Counter(
+            start,
+            period,
+            index => {
+
+                if(!forward) index = this.positiveIndex(array, index) as index;
+                return index < array.length;
+
+            },
+            index => {
+
+                count++;
+                if(!forward) index = this.positiveIndex(array, index) as index;
+                const element: T = array[index];
+                return callbackEach(element, index, array);
 
             }
-        ;
-        const iterator: Counter = new Counter(start, period, condition);
-        let tempPeriod: canBeUndefined<int>;
-
-        for(let index of iterator.iterate()) {
-
-            if(tempPeriod !== undefined) {
-
-                iterator.period = period;
-                tempPeriod = undefined;
-
-            }
-
-            index = this.indexOfInt(array, index) as index;
-            const element: T = array[index];
-            const returnValue = callback(element, index, array);
-            count++;
-
-            if(returnValue === false) break;
-            else if(NumberUtils.isNumber(returnValue)) tempPeriod = returnValue;
-
-            if(tempPeriod !== undefined) iterator.period = tempPeriod;
-
-        }
-
+        );
+        for(let _ of counter.iterate()) {}
         return count;
 
     }
@@ -165,6 +188,17 @@ export default class ArrayUtils {
         const inArray: boolean = this.hasIndex(array, int);
         const index: canBeUndefined<index> =
             inArray ? (NumberUtils.isNegative(int) ? int : (int - length)) : (-length - 1)
+        ;
+        return index;
+
+    }
+
+    public static positiveIndex<T>(array: T[], int: int): canBeUndefined<index> {
+
+        const { length } = array;
+        const inArray: boolean = this.hasIndex(array, int);
+        const index: canBeUndefined<index> =
+            inArray ? (NumberUtils.isNegative(int) ? length + int : int) : undefined
         ;
         return index;
 

@@ -1,6 +1,6 @@
 module SetUtils {
 
-    export type callback<T, R> = (element: T, set: Set<T>) => R;
+    export type callbackEach<T, R> = (element: T, set: Set<T>) => R;
 
 }
 

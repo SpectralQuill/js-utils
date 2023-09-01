@@ -2,14 +2,13 @@ import NumberUtils from "./number";
 
 export default class Range {
 
-    // when start > end switch them
     // in random, make a set of possible numbers and get random from there to simplify
 
     public constructor(
-        public start: number,
-        public end: number,
-        public includeStart: boolean = true,
-        public includeEnd: boolean = true
+        private start: number,
+        private end: number,
+        private includeStart: boolean = true,
+        private includeEnd: boolean = true
     ) {
 
         if(start > end) {

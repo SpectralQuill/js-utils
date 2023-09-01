@@ -1,6 +1,6 @@
 module NumberUtils {
 
-    export type callback<R> = (number: number) => R;
+    export type callbackValue<R> = (number: number) => R;
 
 }
 
@@ -29,9 +29,9 @@ export default class NumberUtils {
 
     }
 
-    public static isNumber(value: any): boolean {
+    public static isNumber(value: unknown): boolean {
 
-        return !isNaN(value);
+        return !isNaN(value as number);
 
     }
 
@@ -62,9 +62,9 @@ export default class NumberUtils {
 
     public static switchSign<R>(
         number: number,
-        positive: NumberUtils.callback<R>,
-        negative: NumberUtils.callback<R>,
-        zero: NumberUtils.callback<R>
+        positive: NumberUtils.callbackValue<R>,
+        negative: NumberUtils.callbackValue<R>,
+        zero: NumberUtils.callbackValue<R>
     ): R {
 
         const { isNegative, isPositive } = NumberUtils;

@@ -1,17 +1,39 @@
+import BooleanUtils from "./boolean";
+import NumberUtils from "./number";
+
 module Counter {
     
-    export type callback<R> = (value: number, start: number, period: number) => R;
-    export type condition = Counter.callback<boolean>;
+    export type callbackEach<R> = (count: number, start: number, period: number) => R;
 
 }
 
 export default class Counter {
 
     public constructor(
-        public start: number = 0,
-        public period: number = 1,
-        public condition: Counter.condition
+        private start: number = 0,
+        private period: number = 1,
+        private condition?: Counter.callbackEach<boolean>,
+        private callbackEach?: Counter.callbackEach<unknown>,
+        private callbackLast?: Counter.callbackEach<void>
     ) {}
+
+    public hasCondition(): boolean {
+
+        return this.condition !== undefined;
+
+    }
+
+    public hasCallbackEach(): boolean {
+
+        return this.callbackEach !== undefined;
+
+    }
+
+    public hasCallbackLast(): boolean {
+
+        return this.callbackLast !== undefined;
+
+    }
 
     public [Symbol.iterator](): Generator<number, number> {
 
@@ -21,15 +43,24 @@ export default class Counter {
 
     public * iterate(): Generator<number, number> {
 
-        const { start } = this;
-        let value = start;
-        while(this.condition(value, start, this.period)) {
+        const { start, period } = this;
+        let count = start;
+        while(this.condition?.(count, start, period) ?? true) {
 
-            yield value;
-            value += this.period;
+            yield count;
+            count += period;
+            if(this.hasCallbackEach()) {
+                
+                const returnValue: unknown = this.callbackEach?.(count, start, period);
+
+                if(returnValue === false) break;
+                else if(NumberUtils.isNumber(returnValue)) count += returnValue as number;
+
+            }
 
         }
-        return value;
+        this.callbackLast?.(count, start, period);
+        return count;
     
     }
 
