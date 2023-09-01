@@ -1,10 +1,9 @@
-type canBeTrue<T> = T | true;
 type canBeUndefined<T> = T | undefined;
 type collection<T> = T[] | Set<T>;
+type frac = number;
 type index = int;
 type int = number;
-type length = number;
-type noArgCallback<R> = () => R;
+type length = int;
 
 /*
 

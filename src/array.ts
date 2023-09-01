@@ -7,6 +7,7 @@ import Range from "./range";
 module ArrayUtils {
 
     export type callbackEach<T, R> = (element: T, index: index, array: T[]) => R;
+    export type deleted<T> = T[];
     export type match<T> = ArrayUtils.callbackEach<T, boolean>;
 
 }
@@ -14,6 +15,14 @@ module ArrayUtils {
 export default class ArrayUtils {
 
     // multiply should take decimals as well
+
+    public static clear<T>(array: T[]): T[] {
+
+        const { length } = array;
+        const deleted: T[] = array.splice(0, length);
+        return deleted;
+
+    }
 
     public static count<T>(array: T[], match: ArrayUtils.match<T>, start: index = 0): number {
 
@@ -27,9 +36,13 @@ export default class ArrayUtils {
 
     }
 
-    public static delete<T>(array: T[], match: ArrayUtils.match<T>, start: index = 0): T[] {
+    public static delete<T>(
+        array: T[],
+        match: ArrayUtils.match<T>,
+        start: index = 0
+    ): ArrayUtils.deleted<T> {
 
-        const deleted: T[] = [];
+        const deleted: ArrayUtils.deleted<T> = [];
         this.iterateFrom(array, start, (element, index) => {
 
             if(match(element, index, array)) {
@@ -41,6 +54,13 @@ export default class ArrayUtils {
             }
 
         });
+        return deleted;
+
+    }
+
+    public static deleteIndexes<T>(array: T[], indexes: Set<index>): ArrayUtils.deleted<T> {
+
+        const deleted: ArrayUtils.deleted<T> = this.delete(array, (_, index) => indexes.has(index));
         return deleted;
 
     }
@@ -123,17 +143,25 @@ export default class ArrayUtils {
 
     }
 
-    public static multiply<T>(array: T[], multiplier: int): length {
+    public static multiply<T>(array: T[], multiplier: frac): ArrayUtils.deleted<T> {
 
-        const end: int = Math.abs(multiplier);
-        for(let count: int = 1; count < end; count++) {
+        const reverse: boolean = NumberUtils.isNegative(multiplier);
+        multiplier = Math.abs(multiplier);
+        const oldLength = array.length;
+        const newLength = Math.round(oldLength * multiplier);
+        let deleted: ArrayUtils.deleted<T>;
 
-            array.push(...array);
+        if(oldLength > newLength) deleted = array.splice(newLength);
+        else if(oldLength < newLength) for(let index = oldLength; index < newLength; index++) {
+
+            let element = array[index % oldLength];
+            array.push(element);
 
         }
-        if(NumberUtils.isNegative(multiplier)) array.reverse();
-        const { length } = array;
-        return length;
+
+        if(reverse) array.reverse();
+        deleted ??= []
+        return deleted;
 
     }
 
@@ -158,14 +186,5 @@ export default class ArrayUtils {
         return index;
 
     }
-
-
-
-
-
-
-
-
-    // static deleteIndexes() {}
 
 }

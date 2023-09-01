@@ -6,8 +6,6 @@ module NumberUtils {
 
 export default class NumberUtils {
 
-    // switchSign: callbacks should be optional
-
     public static decimalPlaces(number: number): number {
 
         const string: string = number.toString();
@@ -62,16 +60,16 @@ export default class NumberUtils {
 
     public static switchSign<R>(
         number: number,
-        positive: NumberUtils.callbackValue<R>,
-        negative: NumberUtils.callbackValue<R>,
-        zero: NumberUtils.callbackValue<R>
-    ): R {
+        positive?: NumberUtils.callbackValue<R>,
+        negative?: NumberUtils.callbackValue<R>,
+        zero?: NumberUtils.callbackValue<R>
+    ): canBeUndefined<R> {
 
         const { isNegative, isPositive } = NumberUtils;
         return (
-            isPositive(number) ? positive(number) :
-            isNegative(number) ? negative(number) :
-            zero(number)
+            isPositive(number) ? positive?.(number) :
+            isNegative(number) ? negative?.(number) :
+            zero?.(number)
         );
 
     }
