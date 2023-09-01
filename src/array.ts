@@ -160,7 +160,7 @@ export default class ArrayUtils {
         }
 
         if(reverse) array.reverse();
-        deleted ??= []
+        deleted ??= [];
         return deleted;
 
     }
