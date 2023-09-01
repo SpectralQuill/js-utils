@@ -13,10 +13,10 @@ module ArrayUtils {
 
 export default class ArrayUtils {
 
-    // indexes (start)
     // multiply should take decimals as well
     // hasIndex -> change: this should only work with integers
-    // iterteFrom() works but try to simplify more
+    // iterateFrom() works but try to simplify more
+    // iterateFrom(): when number is returned, add it to count instead of making tempPeriod
 
     public static count<T>(array: T[], match: ArrayUtils.match<T>, start: index = 0): number {
 
@@ -105,7 +105,7 @@ export default class ArrayUtils {
             forward ? value => (value < array.length) :
             value => {
                 
-                const negativeFirstIndex: index = this.negativeIndexOfInt(array, 0) as number;
+                const negativeFirstIndex: index = this.negativeIndex(array, 0) as number;
                 return value > negativeFirstIndex;
 
             }
@@ -159,7 +159,7 @@ export default class ArrayUtils {
 
     }
 
-    public static negativeIndexOfInt<T>(array: T[], int: int): canBeUndefined<index> {
+    public static negativeIndex<T>(array: T[], int: int): canBeUndefined<index> {
 
         const { length } = array;
         const inArray: boolean = this.hasIndex(array, int);

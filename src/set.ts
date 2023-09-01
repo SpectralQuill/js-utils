@@ -9,7 +9,7 @@ export default class SetUtils {
     /*
 
         To add:
-            getRandom()
+            random()
     
     */
 

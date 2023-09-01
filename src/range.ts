@@ -2,33 +2,46 @@ import NumberUtils from "./number";
 
 export default class Range {
 
-    /*
-
-        To add:
-            period can be a function
-        Changes to make:
-            in getRandom, make a set of possible numbers and get random from there to simplify
-    
-    */
+    // when start > end switch them
+    // in random, make a set of possible numbers and get random from there to simplify
 
     public constructor(
         public start: number,
         public end: number,
         public includeStart: boolean = true,
         public includeEnd: boolean = true
-    ) {}
+    ) {
 
-    public inRange(number: number): boolean {
+        if(start > end) {
 
-        const { start, end, includeStart, includeEnd } = this;
-        return (
-            (includeStart ? number >= start : number > start) &&
-            (includeEnd ? number <= end : number < end)
-        );
+            this.start = end;
+            this.end = start;
+
+        }
 
     }
 
-    public getRandom(period: number = 1): number | undefined {
+    public inRange(number: number): boolean {
+
+        return this.moreThanStart(number) && this.lessThanEnd(number);
+
+    }
+
+    private moreThanStart(number: number): boolean {
+
+        const { start, includeStart } = this;
+        return includeStart ? number >= start : number > start;
+
+    }
+
+    private lessThanEnd(number: number): boolean {
+
+        const { end, includeEnd } = this;
+        return includeEnd ? number <= end : number < end;
+
+    }
+
+    public random(period: number = 1): number | undefined {
 
         let { start, end } = this;
         const { includeStart, includeEnd } = this;
