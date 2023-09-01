@@ -48,7 +48,6 @@ export default class Counter {
         while(this.condition?.(count, start, period) ?? true) {
 
             yield count;
-            count += period;
             if(this.hasCallbackEach()) {
                 
                 const returnValue: unknown = this.callbackEach?.(count, start, period);
@@ -57,6 +56,7 @@ export default class Counter {
                 else if(NumberUtils.isNumber(returnValue)) count += returnValue as number;
 
             }
+            count += period;
 
         }
         this.callbackLast?.(count, start, period);
