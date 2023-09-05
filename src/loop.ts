@@ -40,10 +40,10 @@ export default class Loop {
         const { isEntryControlled, isExitControlled } = this;
         while(true) {
 
-            if(isEntryControlled) if(this.condition()) break;
+            if(isEntryControlled) if(!this.condition()) break;
             yield;
             if(this.callbackEach() === false) break;
-            if(isExitControlled) if(this.condition()) break;
+            if(isExitControlled) if(!this.condition()) break;
 
         }
         this.callbackLast();
