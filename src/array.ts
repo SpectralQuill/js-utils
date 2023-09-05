@@ -13,7 +13,7 @@ module ArrayUtils {
 
 export default class ArrayUtils {
 
-    // count & delete: match should be optional. if undefined, target all.
+    // delete: possibly wrong to put -1. might not work if loop is backwards.
 
     public static clear<T>(array: T[]): T[] {
 
@@ -23,12 +23,12 @@ export default class ArrayUtils {
 
     }
 
-    public static count<T>(array: T[], match: ArrayUtils.match<T>, start: index = 0): number {
+    public static count<T>(array: T[], match?: ArrayUtils.match<T>, start: index = 0): number {
 
         let count: int = 0;
         this.iterateFrom(array, start, (element, index) => {
 
-            if(match(element, index, array)) count++;
+            if(match?.(element, index, array) ?? true) count++;
 
         });
         return count;
@@ -37,18 +37,20 @@ export default class ArrayUtils {
 
     public static delete<T>(
         array: T[],
-        match: ArrayUtils.match<T>,
+        match?: ArrayUtils.match<T>,
         start: index = 0
     ): ArrayUtils.deleted<T> {
 
         const deleted: ArrayUtils.deleted<T> = [];
+        const forward: boolean = !NumberUtils.isNegative(start);
+        const stepBack: int = forward ? -1 : 1;
         this.iterateFrom(array, start, (element, index) => {
 
-            if(match(element, index, array)) {
+            if(match?.(element, index, array) ?? true) {
 
                 array.splice(index, 1);
                 deleted.push(element);
-                return -1;
+                return stepBack;
 
             }
 
@@ -136,7 +138,7 @@ export default class ArrayUtils {
     public static iterateFrom<T>(
         array: T[],
         start: index = 0,
-        callback?: ArrayUtils.callback<T, unknown>
+        callbackEach?: ArrayUtils.callback<T, unknown>
     ): int {
 
         let count: int = 0;
@@ -156,7 +158,7 @@ export default class ArrayUtils {
                 count++;
                 if(!forward) index = this.positiveIndex(array, index) as index;
                 const element: T = array[index];
-                return callback?.(element, index, array);
+                return callbackEach?.(element, index, array);
 
             }
         );
