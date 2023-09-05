@@ -147,7 +147,7 @@ export default class ArrayUtils {
         const period: int = forward ? 1 : -1;
         const condition: (index: index) => boolean =
             forward ? (index => index < array.length) :
-            (index => index > (this.negativeIndex(array, index) as index))
+            (index => index >= (this.negativeIndex(array, 0) as index))
         ;
         const counter = new Counter(
             start,
