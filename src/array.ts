@@ -1,3 +1,4 @@
+import BooleanUtils from "./boolean";
 import CollectionUtils from "./collection";
 import Counter from "./counter";
 import NumberUtils from "./number";
@@ -6,6 +7,13 @@ import Range from "./range";
 module ArrayUtils {
 
     export type callback<T, R> = (element: T, index: index, array: T[]) => R;
+    export type compare<T> = (
+        element1: T,
+        element2: canBeUndefined<T>,
+        index1: index,
+        index2: canBeUndefined<index>,
+        array: T[]
+    ) => boolean;
     export type deleted<T> = T[];
     export type match<T> = ArrayUtils.callback<T, boolean>;
 
@@ -13,7 +21,15 @@ module ArrayUtils {
 
 export default class ArrayUtils {
 
-    // delete: possibly wrong to put -1. might not work if loop is backwards.
+    /*
+    
+        To add:
+            middleIndex()
+            most()
+            pickIndex()
+            pickElement()
+    
+    */
 
     public static clear<T>(array: T[]): T[] {
 
@@ -26,11 +42,11 @@ export default class ArrayUtils {
     public static count<T>(array: T[], match?: ArrayUtils.match<T>, start: index = 0): number {
 
         let count: int = 0;
-        this.iterateFrom(array, start, (element, index) => {
+        this.iterateFrom(array, (element, index) => {
 
-            if(match?.(element, index, array) ?? true) count++;
+            if(BooleanUtils.trueIfUndefined(match?.(element, index, array))) count++;
 
-        });
+        }, start);
         return count;
 
     }
@@ -44,9 +60,9 @@ export default class ArrayUtils {
         const deleted: ArrayUtils.deleted<T> = [];
         const forward: boolean = !NumberUtils.isNegative(start);
         const stepBack: int = forward ? -1 : 1;
-        this.iterateFrom(array, start, (element, index) => {
+        this.iterateFrom(array, (element, index) => {
 
-            if(match?.(element, index, array) ?? true) {
+            if(BooleanUtils.trueIfUndefined(match?.(element, index, array))) {
 
                 array.splice(index, 1);
                 deleted.push(element);
@@ -54,7 +70,7 @@ export default class ArrayUtils {
 
             }
 
-        });
+        }, start);
         return deleted;
 
     }
@@ -73,7 +89,7 @@ export default class ArrayUtils {
     ): canBeUndefined<T> {
 
         let firstElement: canBeUndefined<T>;
-        this.iterateFrom(array, start, (element, index) => {
+        this.iterateFrom(array, (element, index) => {
 
             if(match(element, index, array)) {
                 
@@ -82,14 +98,8 @@ export default class ArrayUtils {
 
             }
 
-        });
+        }, start);
         return firstElement;
-
-    }
-
-    private static hasZeroIndex(_: unknown, index: index): boolean {
-
-        return NumberUtils.isZero(index);
 
     }
 
@@ -137,8 +147,8 @@ export default class ArrayUtils {
 
     public static iterateFrom<T>(
         array: T[],
-        start: index = 0,
-        callbackEach?: ArrayUtils.callback<T, unknown>
+        callbackEach?: ArrayUtils.callback<T, unknown>,
+        start: index = 0
     ): int {
 
         let count: int = 0;
@@ -171,6 +181,24 @@ export default class ArrayUtils {
 
         const { length } = array;
         return length == 0 ? undefined : (length - 1);
+
+    }
+
+    public static most<T>(array: T[], compare?: ArrayUtils.compare<T>, start: index = 0): canBeUndefined<T> {
+
+        let mostElement: canBeUndefined<T>;
+        let mostIndex: canBeUndefined<index>;
+        this.iterateFrom(array, (element, index) => {
+
+            if(BooleanUtils.trueIfUndefined(compare?.(element, mostElement, index, mostIndex, array))) {
+
+                mostElement = element;
+                mostIndex = index;
+
+            }
+
+        }, start);
+        return mostElement;
 
     }
 
@@ -215,6 +243,12 @@ export default class ArrayUtils {
             inArray ? (NumberUtils.isNegative(int) ? (length + int) : int) : undefined
         ;
         return index;
+
+    }
+
+    private static hasZeroIndex(_: unknown, index: index): boolean {
+
+        return NumberUtils.isZero(index);
 
     }
 

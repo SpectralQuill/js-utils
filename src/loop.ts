@@ -1,3 +1,5 @@
+import BooleanUtils from "./boolean";
+
 module Loop {
 
     export type callback<R> = () => R;
@@ -42,7 +44,7 @@ export default class Loop {
 
     private stop(): boolean {
 
-        return !(this.condition?.() ?? true);
+        return !(BooleanUtils.trueIfUndefined(this.condition?.()));
 
     }
 

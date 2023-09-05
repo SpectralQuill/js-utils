@@ -14,9 +14,9 @@
   "author": "Gian Tristian G. Apostol",
   "license": "GPL-3.0-only",
   "bugs": {
-    "url": "https://github.com/SpectralQuill/js-utils/issues"
+    "url": "https://github.com/SpectralQuill/ts-utils/issues"
   },
-  "homepage": "https://github.com/SpectralQuill/js-utils#readme",
+  "homepage": "https://github.com/SpectralQuill/ts-utils#readme",
   "devDependencies": {
     "typescript": "^5.1.6"
   }
