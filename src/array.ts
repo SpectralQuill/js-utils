@@ -139,15 +139,14 @@ export default class ArrayUtils {
         if(CollectionUtils.isEmpty(array)) return count;
         const forward: boolean = !NumberUtils.isNegative(start);
         const period: int = forward ? 1 : -1;
+        const condition: (index: index) => boolean =
+            forward ? (index => index < array.length) :
+            (index => index >= (this.negativeIndex(array, index) as index))
+        ;
         const counter = new Counter(
             start,
             period,
-            index => {
-
-                if(!forward) index = this.positiveIndex(array, index) as index;
-                return index < array.length;
-
-            },
+            condition,
             index => {
 
                 count++;
