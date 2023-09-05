@@ -34,6 +34,12 @@ export default class NumberUtils {
 
     }
 
+    public static isNonnegative(number: number): boolean {
+
+        return number >= 0;
+
+    }
+
     public static isNumber(value: unknown): boolean {
 
         return !isNaN(value as number);

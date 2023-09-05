@@ -102,8 +102,12 @@ export default class ArrayUtils {
 
         const { length } = array;
         if(length == 0 || !NumberUtils.isInteger(index)) return false;
-        if(NumberUtils.isNegative(index)) index = this.positiveIndex(array, index) as index;
-        const range: Range = new Range(0, length, true, false);
+        const isNonnegative: boolean = NumberUtils.isNonnegative(index);
+        const start: index = isNonnegative ? 0 : -length;
+        const end: index = isNonnegative ? length : -1;
+        const includeStart: boolean = true;
+        const includeEnd: boolean = !isNonnegative;
+        const range: Range = new Range(start, end, includeStart, includeEnd);
         return range.inRange(index);
 
     }
@@ -206,7 +210,7 @@ export default class ArrayUtils {
         const { length } = array;
         const inArray: boolean = this.hasIndex(array, int);
         const index: canBeUndefined<index> =
-            inArray ? (NumberUtils.isNegative(int) ? length + int : int) : undefined
+            inArray ? (NumberUtils.isNegative(int) ? (length + int) : int) : undefined
         ;
         return index;
 
