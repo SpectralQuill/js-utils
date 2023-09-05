@@ -1,4 +1,3 @@
-import BooleanUtils from "./boolean";
 import CollectionUtils from "./collection";
 import Counter from "./counter";
 import NumberUtils from "./number";
@@ -13,8 +12,6 @@ module ArrayUtils {
 }
 
 export default class ArrayUtils {
-
-    // multiply should take decimals as well
 
     public static clear<T>(array: T[]): T[] {
 

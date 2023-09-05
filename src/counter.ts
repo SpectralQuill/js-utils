@@ -1,39 +1,21 @@
-import BooleanUtils from "./boolean";
+import Loop from "./loop";
 import NumberUtils from "./number";
 
 module Counter {
     
-    export type callbackEach<R> = (count: number, start: number, period: number) => R;
+    export type callback<R> = (count: number, start: number, period: number) => R;
 
 }
 
 export default class Counter {
 
     public constructor(
-        private start: number = 0,
-        private period: number = 1,
-        private condition?: Counter.callbackEach<boolean>,
-        private callbackEach?: Counter.callbackEach<unknown>,
-        private callbackLast?: Counter.callbackEach<void>
+        private readonly start: number = 0,
+        private readonly period: number = 1,
+        private readonly condition?: Counter.callback<boolean>,
+        private readonly callbackEach?: Counter.callback<unknown>,
+        private readonly callbackLast?: Counter.callback<void>
     ) {}
-
-    public hasCondition(): boolean {
-
-        return this.condition !== undefined;
-
-    }
-
-    public hasCallbackEach(): boolean {
-
-        return this.callbackEach !== undefined;
-
-    }
-
-    public hasCallbackLast(): boolean {
-
-        return this.callbackLast !== undefined;
-
-    }
 
     public [Symbol.iterator](): Generator<number, number> {
 
@@ -45,23 +27,19 @@ export default class Counter {
 
         const { start, period } = this;
         let count = start;
-        while(this.condition?.(count, start, period) ?? true) {
+        const loop: Loop = new Loop(
+            () => this.condition?.(count, start, period) ?? true,
+            () => this.callbackEach?.(count, start, period),
+            () => this.callbackLast?.(count, start, period)
+        );
+        for(let _ of loop.iterate()) {
 
             yield count;
-            if(this.hasCallbackEach()) {
-                
-                const returnValue: unknown = this.callbackEach?.(count, start, period);
-
-                if(returnValue === false) break;
-                else if(NumberUtils.isNumber(returnValue)) count += returnValue as number;
-
-            }
             count += period;
 
         }
-        this.callbackLast?.(count, start, period);
         return count;
-    
+
     }
 
 }

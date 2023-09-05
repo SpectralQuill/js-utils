@@ -5,10 +5,10 @@ export default class Range {
     // in random, make a set of possible numbers and get random from there to simplify
 
     public constructor(
-        private start: number,
-        private end: number,
-        private includeStart: boolean = true,
-        private includeEnd: boolean = true
+        private readonly start: number,
+        private readonly end: number,
+        private readonly includeStart: boolean = true,
+        private readonly includeEnd: boolean = true
     ) {
 
         if(start > end) {
