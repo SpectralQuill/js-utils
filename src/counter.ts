@@ -1,4 +1,5 @@
 import Loop from "./loop";
+import NumberUtils from "./number";
 
 module Counter {
     
@@ -28,13 +29,19 @@ export default class Counter {
         let count = start;
         const loop: Loop = new Loop(
             () => this.condition?.(count, start, period) ?? true,
-            () => this.callbackEach?.(count, start, period),
+            () => {
+                
+                const returnValue = this.callbackEach?.(count, start, period);
+                if(NumberUtils.isNumber(returnValue)) count += returnValue as number;
+                count += period;
+                return returnValue;
+
+            },
             () => this.callbackLast?.(count, start, period)
         );
         for(let _ of loop.iterate()) {
 
             yield count;
-            count += period;
 
         }
         return count;
