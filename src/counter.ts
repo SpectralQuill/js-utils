@@ -1,5 +1,4 @@
 import Loop from "./loop";
-import NumberUtils from "./number";
 
 module Counter {
     

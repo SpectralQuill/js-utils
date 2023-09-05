@@ -6,22 +6,12 @@ module Loop {
 
 export default class Loop {
 
-    private readonly condition: Loop.callback<boolean>;
-    private readonly callbackEach: Loop.callback<unknown>;
-    private readonly callbackLast: Loop.callback<void>;
-
     public constructor(
-        condition?: Loop.callback<boolean>,
-        callbackEach?: Loop.callback<unknown>,
-        callbackLast?: Loop.callback<void>,
+        private readonly condition?: Loop.callback<boolean>,
+        private readonly callbackEach?: Loop.callback<unknown>,
+        private readonly callbackLast?: Loop.callback<void>,
         private readonly isEntryControlled: boolean = true
-    ) {
-
-        this.condition = () => condition?.() ?? true;
-        this.callbackEach = () => callbackEach?.();
-        this.callbackLast = () => callbackLast?.();
-
-    }
+    ) {}
 
     public get isExitControlled(): boolean {
 
@@ -40,13 +30,19 @@ export default class Loop {
         const { isEntryControlled, isExitControlled } = this;
         while(true) {
 
-            if(isEntryControlled) if(!this.condition()) break;
+            if(isEntryControlled) if(this.stop()) break;
             yield;
-            if(this.callbackEach() === false) break;
-            if(isExitControlled) if(!this.condition()) break;
+            if(this.callbackEach?.() === false) break;
+            if(isExitControlled) if(this.stop()) break;
 
         }
-        this.callbackLast();
+        this.callbackLast?.();
+
+    }
+
+    private stop(): boolean {
+
+        return !(this.condition?.() ?? true);
 
     }
 

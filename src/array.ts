@@ -5,13 +5,15 @@ import Range from "./range";
 
 module ArrayUtils {
 
-    export type callbackEach<T, R> = (element: T, index: index, array: T[]) => R;
+    export type callback<T, R> = (element: T, index: index, array: T[]) => R;
     export type deleted<T> = T[];
-    export type match<T> = ArrayUtils.callbackEach<T, boolean>;
+    export type match<T> = ArrayUtils.callback<T, boolean>;
 
 }
 
 export default class ArrayUtils {
+
+    // count & delete: match should be optional. if undefined, target all.
 
     public static clear<T>(array: T[]): T[] {
 
@@ -62,6 +64,33 @@ export default class ArrayUtils {
 
     }
 
+    public static firstElement<T>(
+        array: T[],
+        match: ArrayUtils.match<T> = this.hasZeroIndex,
+        start: index = 0
+    ): canBeUndefined<T> {
+
+        let firstElement: canBeUndefined<T>;
+        this.iterateFrom(array, start, (element, index) => {
+
+            if(match(element, index, array)) {
+                
+                firstElement = element;
+                return false;
+
+            }
+
+        });
+        return firstElement;
+
+    }
+
+    private static hasZeroIndex(_: unknown, index: index): boolean {
+
+        return NumberUtils.isZero(index);
+
+    }
+
     public static firstIndex<T>(array: T[]): canBeUndefined<index> {
 
         const { length } = array;
@@ -103,7 +132,7 @@ export default class ArrayUtils {
     public static iterateFrom<T>(
         array: T[],
         start: index = 0,
-        callbackEach?: ArrayUtils.callbackEach<T, unknown>
+        callback?: ArrayUtils.callback<T, unknown>
     ): int {
 
         let count: int = 0;
@@ -124,7 +153,7 @@ export default class ArrayUtils {
                 count++;
                 if(!forward) index = this.positiveIndex(array, index) as index;
                 const element: T = array[index];
-                return callbackEach?.(element, index, array);
+                return callback?.(element, index, array);
 
             }
         );

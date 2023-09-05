@@ -40,7 +40,7 @@ export default class Range {
 
     }
 
-    public random(period: number = 1): number | undefined {
+    public random(period: number = 1): canBeUndefined<number> {
 
         let { start, end } = this;
         const { includeStart, includeEnd } = this;

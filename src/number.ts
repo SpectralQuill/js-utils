@@ -6,6 +6,13 @@ module NumberUtils {
 
 export default class NumberUtils {
 
+    /*
+    
+        To add:
+            largest
+    
+    */
+
     public static decimalPlaces(number: number): number {
 
         const string: string = number.toString();
