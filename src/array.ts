@@ -1,4 +1,3 @@
-import BooleanUtils from "./boolean";
 import CollectionUtils from "./collection";
 import Counter from "./counter";
 import NumberUtils from "./number";
@@ -15,7 +14,7 @@ module ArrayUtils {
         array: T[]
     ) => boolean;
     export type deleted<T> = T[];
-    export type match<T> = ArrayUtils.callback<T, boolean>;
+    export type match<T> = callback<T, boolean>;
 
 }
 
@@ -24,12 +23,22 @@ export default class ArrayUtils {
     /*
     
         To add:
-            middleIndex()
-            most()
             pickIndex()
             pickElement()
+            pickElements()
+            shuffle()
+        
+        To change:
     
     */
+
+    public static addArray<T>(array: T[], add: T[], index: index = array.length): length {
+
+        array.splice(index, 0, ...add);
+        const { length } = array;
+        return length;
+
+    }
 
     public static clear<T>(array: T[]): T[] {
 
@@ -39,19 +48,19 @@ export default class ArrayUtils {
 
     }
 
-    public static count<T>(array: T[], match?: ArrayUtils.match<T>, start: index = 0): number {
+    public static countMatch<T>(array: T[], match?: ArrayUtils.match<T>, start: index = 0): int {
 
         let count: int = 0;
-        this.iterateFrom(array, (element, index) => {
+        this.iterateFrom(array, start, (element, index) => {
 
-            if(BooleanUtils.trueIfUndefined(match?.(element, index, array))) count++;
+            if(match?.(element, index, array) ?? true) count++;
 
-        }, start);
+        });
         return count;
 
     }
 
-    public static delete<T>(
+    public static deleteMatch<T>(
         array: T[],
         match?: ArrayUtils.match<T>,
         start: index = 0
@@ -60,9 +69,9 @@ export default class ArrayUtils {
         const deleted: ArrayUtils.deleted<T> = [];
         const forward: boolean = !NumberUtils.isNegative(start);
         const stepBack: int = forward ? -1 : 1;
-        this.iterateFrom(array, (element, index) => {
+        this.iterateFrom(array, start, (element, index) => {
 
-            if(BooleanUtils.trueIfUndefined(match?.(element, index, array))) {
+            if(match?.(element, index, array) ?? true) {
 
                 array.splice(index, 1);
                 deleted.push(element);
@@ -70,14 +79,14 @@ export default class ArrayUtils {
 
             }
 
-        }, start);
+        });
         return deleted;
 
     }
 
     public static deleteIndexes<T>(array: T[], indexes: Set<index>): ArrayUtils.deleted<T> {
 
-        const deleted: ArrayUtils.deleted<T> = this.delete(array, (_, index) => indexes.has(index));
+        const deleted: ArrayUtils.deleted<T> = this.deleteMatch(array, (_, index) => indexes.has(index));
         return deleted;
 
     }
@@ -89,7 +98,7 @@ export default class ArrayUtils {
     ): canBeUndefined<T> {
 
         let firstElement: canBeUndefined<T>;
-        this.iterateFrom(array, (element, index) => {
+        this.iterateFrom(array, start, (element, index) => {
 
             if(match(element, index, array)) {
                 
@@ -98,15 +107,15 @@ export default class ArrayUtils {
 
             }
 
-        }, start);
+        });
         return firstElement;
 
     }
 
-    public static firstIndex<T>(array: T[]): canBeUndefined<index> {
+    public static firstIndex<T>(array: T[], nonnegative: boolean = true): canBeUndefined<index> {
 
-        const { length } = array;
-        return length == 0 ? undefined : 0;
+        const index: index = 0;
+        return nonnegative ? this.nonnegativeIndex(array, index) : this.negativeIndex(array, index);
 
     }
 
@@ -124,12 +133,12 @@ export default class ArrayUtils {
 
     }
 
-    public static indexes<T>(array: T[], positive: boolean = true): index[] {
+    public static indexes<T>(array: T[], nonnegative: boolean = true): index[] {
 
         const indexes: index[] = [];
         array.forEach((_, index) => {
 
-            if(!positive) index = this.negativeIndex(array, index) as index;
+            if(!nonnegative) index = this.negativeIndex(array, index) as index;
             indexes.push(index);
 
         });
@@ -137,18 +146,18 @@ export default class ArrayUtils {
 
     }
 
-    public static insert<T>(array: T[], add: T[], index: index = array.length): length {
+    public static isEmpty<T>(array: T[]): boolean {
 
-        array.splice(index, 0, ...add);
         const { length } = array;
-        return length;
+        return length == 0;
 
     }
 
     public static iterateFrom<T>(
         array: T[],
+        start: index = 0,
         callbackEach?: ArrayUtils.callback<T, unknown>,
-        start: index = 0
+        callbackLast?: ArrayUtils.callback<T, void>
     ): int {
 
         let count: int = 0;
@@ -166,9 +175,14 @@ export default class ArrayUtils {
             index => {
 
                 count++;
-                if(!forward) index = this.positiveIndex(array, index) as index;
-                const element: T = array[index];
+                const element: T = array.at(index) as T;
                 return callbackEach?.(element, index, array);
+
+            },
+            index => {
+
+                const element: T = array.at(index) as T;
+                callbackLast?.(element, index, array);
 
             }
         );
@@ -177,27 +191,39 @@ export default class ArrayUtils {
 
     }
 
-    public static lastIndex<T>(array: T[]): canBeUndefined<index> {
+    public static lastIndex<T>(array: T[], nonnegative: boolean = true): canBeUndefined<index> {
 
-        const { length } = array;
-        return length == 0 ? undefined : (length - 1);
+        const index: index = length - 1;
+        return nonnegative ? this.nonnegativeIndex(array, index) : this.negativeIndex(array, index);
 
     }
 
-    public static most<T>(array: T[], compare?: ArrayUtils.compare<T>, start: index = 0): canBeUndefined<T> {
+    public static middleIndex<T>(
+        array: T[],
+        percentage: frac = 0.5,
+        nonnegative: boolean = true
+    ): canBeUndefined<index> {
+
+        const { length } = this;
+        const index: index = Math.round(length * percentage) - 1;
+        return nonnegative ? this.nonnegativeIndex(array, index) : this.negativeIndex(array, index);
+
+    }
+
+    public static most<T>(array: T[], compare: ArrayUtils.compare<T>, start: index = 0): canBeUndefined<T> {
 
         let mostElement: canBeUndefined<T>;
         let mostIndex: canBeUndefined<index>;
-        this.iterateFrom(array, (element, index) => {
+        this.iterateFrom(array, start, (element, index) => {
 
-            if(BooleanUtils.trueIfUndefined(compare?.(element, mostElement, index, mostIndex, array))) {
+            if(compare(element, mostElement, index, mostIndex, array) ?? true) {
 
                 mostElement = element;
                 mostIndex = index;
 
             }
 
-        }, start);
+        });
         return mostElement;
 
     }
@@ -227,26 +253,26 @@ export default class ArrayUtils {
     public static negativeIndex<T>(array: T[], int: int): canBeUndefined<index> {
 
         const { length } = array;
-        const inArray: boolean = this.hasIndex(array, int);
+        const hasIndex: boolean = this.hasIndex(array, int);
         const index: canBeUndefined<index> =
-            inArray ? (NumberUtils.isNegative(int) ? int : (int - length)) : (-length - 1)
+            hasIndex ? (NumberUtils.isNegative(int) ? int : (int - length)) : undefined
         ;
         return index;
 
     }
 
-    public static positiveIndex<T>(array: T[], int: int): canBeUndefined<index> {
+    public static nonnegativeIndex<T>(array: T[], int: int): canBeUndefined<index> {
 
         const { length } = array;
-        const inArray: boolean = this.hasIndex(array, int);
+        const hasIndex: boolean = this.hasIndex(array, int);
         const index: canBeUndefined<index> =
-            inArray ? (NumberUtils.isNegative(int) ? (length + int) : int) : undefined
+        hasIndex ? (NumberUtils.isNegative(int) ? (length + int) : int) : undefined
         ;
         return index;
 
     }
 
-    private static hasZeroIndex(_: unknown, index: index): boolean {
+    private static hasZeroIndex<T>(_: T, index: index): boolean {
 
         return NumberUtils.isZero(index);
 

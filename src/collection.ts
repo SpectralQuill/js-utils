@@ -6,6 +6,25 @@ module CollectionUtils {
 
 export default class CollectionUtils {
 
+    /*
+
+        To add:
+            clear()
+            countMatch()
+            deleteMatch()
+            every()
+            insert()
+            isEmpty(): generalized
+            most()
+            pickElement()
+            some()
+            toArray()
+    
+        To change:
+            - isEmpty should seperately be in array and set. a general one can be here.
+    
+    */
+
     public static isEmpty<T>(collection: collection<T>): boolean {
 
         return this.switchType(

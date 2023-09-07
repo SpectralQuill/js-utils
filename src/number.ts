@@ -9,11 +9,14 @@ export default class NumberUtils {
     /*
     
         To add:
-            largest
+            largest()
+            smallest()
+
+        To change:
     
     */
 
-    public static decimalPlaces(number: number): number {
+    public static decimalPlacesLength(number: frac): length {
 
         const string: string = number.toString();
         const length: int = string.length;
@@ -22,19 +25,26 @@ export default class NumberUtils {
 
     }
 
-    public static isInteger(number: number): boolean {
+    public static dilate(number: frac, dilate: int = this.decimalPlacesLength(number)): frac {
+
+        const multiplier: frac = 10**dilate;
+        return number * multiplier;
+
+    }
+
+    public static isInteger(number: frac): boolean {
 
         return number % 1 === 0;
 
     }
 
-    public static isNegative(number: number): boolean {
+    public static isNegative(number: frac): boolean {
 
         return number < 0;
 
     }
 
-    public static isNonnegative(number: number): boolean {
+    public static isNonnegative(number: frac): boolean {
 
         return number >= 0;
 
@@ -52,22 +62,41 @@ export default class NumberUtils {
 
     }
 
-    public static isZero(number: number): boolean {
+    public static isZero(number: frac): boolean {
 
         return number == 0;
 
     }
 
-    public static mostDecimalPlaces(collection: collection<number>): number {
+    public static mostDecimalPlaces(...numbers: frac[]): canBeUndefined<frac> {
 
-        let mostDecimalPlaces: int = 0;
-        collection.forEach(number => {
+        let mostDecimalPlaces: canBeUndefined<frac>;
+        let mostDecimalPlacesLength: int = 0;
+        numbers.forEach(number => {
 
-            const decimalPlaces: int = NumberUtils.decimalPlaces(number);
-            if(decimalPlaces > mostDecimalPlaces) mostDecimalPlaces = decimalPlaces;
+            const decimalPlacesLength: int = this.decimalPlacesLength(number);
+            if(mostDecimalPlaces == undefined || decimalPlacesLength > mostDecimalPlacesLength) {
+
+                mostDecimalPlaces = number;
+                mostDecimalPlacesLength = decimalPlacesLength;
+
+            }
 
         });
         return mostDecimalPlaces;
+
+    }
+
+    public static mostDecimalPlacesLength(...numbers: frac[]): length {
+
+        let mostDecimalPlacesLength: int = 0;
+        numbers.forEach(number => {
+
+            const decimalPlacesLength: int = this.decimalPlacesLength(number);
+            if(decimalPlacesLength > mostDecimalPlacesLength) mostDecimalPlacesLength = decimalPlacesLength;
+
+        });
+        return mostDecimalPlacesLength;
 
     }
 

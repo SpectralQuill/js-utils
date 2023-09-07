@@ -44,7 +44,7 @@ export default class Loop {
 
     private stop(): boolean {
 
-        return !(BooleanUtils.trueIfUndefined(this.condition?.()));
+        return !(this.condition?.() ?? true);
 
     }
 
