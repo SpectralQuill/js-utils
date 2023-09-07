@@ -27,8 +27,11 @@ export default class NumberUtils {
 
     public static dilate(number: frac, dilate: int = this.decimalPlacesLength(number)): frac {
 
-        const multiplier: frac = 10**dilate;
-        return number * multiplier;
+        if(this.isNonnegative(dilate))
+            number *= 10**dilate;
+        else
+            number /= 10**Math.abs(dilate);
+        return number;
 
     }
 
