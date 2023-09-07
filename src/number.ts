@@ -18,10 +18,7 @@ export default class NumberUtils {
 
     public static decimalPlacesLength(number: frac): length {
 
-        const string: string = number.toString();
-        const length: int = string.length;
-        const decimalIndex: index = string.indexOf(".");
-        return decimalIndex > -1 ? (length - decimalIndex - 1) : 0;
+        return this.isInteger(number) ? 0 : (number % 1).toString().length - 2;
 
     }
 

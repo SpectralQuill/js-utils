@@ -23,12 +23,12 @@ export default class ArrayUtils {
     /*
     
         To add:
-            pickIndex()
-            pickElement()
             pickElements()
             shuffle()
         
         To change:
+            countMatch(): max
+            deleteMatch(): max
     
     */
 
@@ -48,12 +48,18 @@ export default class ArrayUtils {
 
     }
 
-    public static countMatch<T>(array: T[], match?: ArrayUtils.match<T>, start: index = 0): int {
+    public static countMatch<T>(
+        array: T[], match?: ArrayUtils.match<T>,
+        start: index = 0,
+        max?: int
+    ): int {
 
         let count: int = 0;
+        const maxed: () => boolean = () => max == undefined ? false : count == max;
         this.iterateFrom(array, start, (element, index) => {
 
             if(match?.(element, index, array) ?? true) count++;
+            if(maxed()) return false;
 
         });
         return count;
@@ -63,19 +69,21 @@ export default class ArrayUtils {
     public static deleteMatch<T>(
         array: T[],
         match?: ArrayUtils.match<T>,
-        start: index = 0
+        start: index = 0,
+        max?: int
     ): ArrayUtils.deleted<T> {
 
         const deleted: ArrayUtils.deleted<T> = [];
         const forward: boolean = !NumberUtils.isNegative(start);
         const stepBack: int = forward ? -1 : 1;
+        const maxed: () => boolean = () => max == undefined ? false : deleted.length == max;
         this.iterateFrom(array, start, (element, index) => {
 
             if(match?.(element, index, array) ?? true) {
 
                 array.splice(index, 1);
                 deleted.push(element);
-                return stepBack;
+                return maxed() ? false : stepBack;
 
             }
 
@@ -250,25 +258,59 @@ export default class ArrayUtils {
 
     }
 
-    public static negativeIndex<T>(array: T[], int: int): canBeUndefined<index> {
+    public static negativeIndex<T>(array: T[], index: index): canBeUndefined<index> {
 
         const { length } = array;
-        const hasIndex: boolean = this.hasIndex(array, int);
-        const index: canBeUndefined<index> =
-            hasIndex ? (NumberUtils.isNegative(int) ? int : (int - length)) : undefined
-        ;
+        const hasIndex: boolean = this.hasIndex(array, index);
+        if(!hasIndex) return;
+        index = NumberUtils.isNegative(index) ? index : (index - length);
         return index;
 
     }
 
-    public static nonnegativeIndex<T>(array: T[], int: int): canBeUndefined<index> {
+    public static nonnegativeIndex<T>(array: T[], index: index): canBeUndefined<index> {
 
         const { length } = array;
-        const hasIndex: boolean = this.hasIndex(array, int);
-        const index: canBeUndefined<index> =
-        hasIndex ? (NumberUtils.isNegative(int) ? (length + int) : int) : undefined
-        ;
+        const hasIndex: boolean = this.hasIndex(array, index);
+        if(!hasIndex) return;
+        index = NumberUtils.isNegative(index) ? (length + index) : index;
         return index;
+
+    }
+
+    public static pickIndex<T>(array: T[], nonnegative: boolean = true): canBeUndefined<index> {
+
+        const { length } = array;
+        if(length == 0) return;
+        const range: Range = new Range(0, length, true, false);
+        let index: index = range.pickNumber() as index;
+        if(!nonnegative) index = this.negativeIndex(array, index) as index;
+        return index;
+
+    }
+
+    public static pickElement<T>(array: T[]): canBeUndefined<T> {
+
+        return array[this.pickIndex(array) as index];
+
+    }
+
+    public static pickElements<T>(array: T[], length: length): T[] {
+
+        const pickedElements: T[] = [];
+        if(this.isEmpty(array)) return pickedElements;
+        const superLength: length = array.length;
+        const indexes: index[] = this.indexes(array);
+        if(length > superLength) length = superLength;
+        for(let count = 0; count < length; count++) {
+
+            const pickedIndex: index = this.pickElement(indexes) as index;
+            this.deleteMatch(indexes, index => index == pickedIndex, 0, 1);
+            const element: T = array[pickedIndex];
+            pickedElements.push(element);
+
+        }
+        return pickedElements;
 
     }
 
