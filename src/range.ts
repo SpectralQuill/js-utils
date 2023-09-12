@@ -46,6 +46,8 @@ export default class Range {
 
     }
 
+    
+
     private moreThanStart(number: frac): boolean {
 
         const { start, includeStart } = this;

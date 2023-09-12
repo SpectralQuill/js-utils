@@ -1,4 +1,3 @@
-import CollectionUtils from "./collection";
 import Counter from "./counter";
 import NumberUtils from "./number";
 import Range from "./range";
@@ -23,12 +22,15 @@ export default class ArrayUtils {
     /*
     
         To add:
-            pickElements()
-            shuffle()
         
         To change:
-            countMatch(): max
-            deleteMatch(): max
+            indexes(): match & start
+            pickElement() & pickElements():
+                match
+                length -> max
+            pickElements():
+                - match
+                - apply match first then keep list of indexes
     
     */
 
@@ -40,26 +42,23 @@ export default class ArrayUtils {
 
     }
 
-    public static clear<T>(array: T[]): T[] {
+    public static clear<T>(array: T[]): void {
 
-        const { length } = array;
-        const deleted: T[] = array.splice(0, length);
-        return deleted;
+        array.splice(0, array.length);
 
     }
 
     public static countMatch<T>(
         array: T[], match?: ArrayUtils.match<T>,
         start: index = 0,
-        max?: int
-    ): int {
+        max?: length
+    ): length {
 
-        let count: int = 0;
-        const maxed: () => boolean = () => max == undefined ? false : count == max;
+        let count: length = 0;
         this.iterateFrom(array, start, (element, index) => {
 
             if(match?.(element, index, array) ?? true) count++;
-            if(maxed()) return false;
+            if(NumberUtils.maxed(count, max)) return false;
 
         });
         return count;
@@ -70,20 +69,19 @@ export default class ArrayUtils {
         array: T[],
         match?: ArrayUtils.match<T>,
         start: index = 0,
-        max?: int
+        max?: length
     ): ArrayUtils.deleted<T> {
 
         const deleted: ArrayUtils.deleted<T> = [];
         const forward: boolean = !NumberUtils.isNegative(start);
         const stepBack: int = forward ? -1 : 1;
-        const maxed: () => boolean = () => max == undefined ? false : deleted.length == max;
         this.iterateFrom(array, start, (element, index) => {
 
             if(match?.(element, index, array) ?? true) {
 
                 array.splice(index, 1);
                 deleted.push(element);
-                return maxed() ? false : stepBack;
+                return NumberUtils.maxed(deleted.length, max) ? false : stepBack;
 
             }
 
@@ -92,9 +90,25 @@ export default class ArrayUtils {
 
     }
 
+    public static deleteIndex<T>(array: T[], index: index): canBeUndefined<T> {
+
+        if(this.isEmpty(array)) return;
+        const element: T = array[index];
+        array.splice(index, 1);
+        return element;
+
+    }
+
     public static deleteIndexes<T>(array: T[], indexes: Set<index>): ArrayUtils.deleted<T> {
 
-        const deleted: ArrayUtils.deleted<T> = this.deleteMatch(array, (_, index) => indexes.has(index));
+        const deleted: ArrayUtils.deleted<T> = [];
+        if(this.isEmpty(array)) return deleted;
+        indexes.forEach(index => {
+            
+            const element: T = this.deleteIndex(array, index) as T;
+            deleted.push(element);
+
+        });
         return deleted;
 
     }
@@ -169,7 +183,7 @@ export default class ArrayUtils {
     ): int {
 
         let count: int = 0;
-        if(CollectionUtils.isEmpty(array)) return count;
+        if(this.isEmpty(array)) return count;
         const forward: boolean = !NumberUtils.isNegative(start);
         const period: int = forward ? 1 : -1;
         const condition: (index: index) => boolean =
@@ -278,8 +292,13 @@ export default class ArrayUtils {
 
     }
 
-    public static pickIndex<T>(array: T[], nonnegative: boolean = true): canBeUndefined<index> {
+    public static pickIndex<T>(
+        array: T[],
+        match?: ArrayUtils.match<T>,
+        nonnegative: boolean = true
+    ): canBeUndefined<index> {
 
+        if(match instanceof Function) array = array.filter(match);
         const { length } = array;
         if(length == 0) return;
         const range: Range = new Range(0, length, true, false);
@@ -289,30 +308,54 @@ export default class ArrayUtils {
 
     }
 
-    public static pickElement<T>(array: T[]): canBeUndefined<T> {
+    public static pickElement<T>(
+        array: T[],
+        match?: ArrayUtils.match<T>,
+        deleteElement: boolean = false
+    ): canBeUndefined<T> {
 
-        return array[this.pickIndex(array) as index];
+        const index: canBeUndefined<index> = this.pickIndex(array, match);
+        if(index == undefined) return;
+        const element: T = array[index];
+        if(deleteElement) this.deleteIndex(array, index);
+        return element;
 
     }
 
-    public static pickElements<T>(array: T[], length: length): T[] {
+    public static pickElements<T>(
+        array: T[], match?: ArrayUtils.match<T>,
+        max: length = array.length,
+        deleteElements: boolean = false
+    ): T[] {
 
-        const pickedElements: T[] = [];
-        if(this.isEmpty(array)) return pickedElements;
-        const superLength: length = array.length;
-        const indexes: index[] = this.indexes(array);
-        if(length > superLength) length = superLength;
-        for(let count = 0; count < length; count++) {
+        if(match instanceof Function) array = array.filter(match);
+        const picked: T[] = [];
+        const indexes: index[] = ArrayUtils.indexes(array);
+        while(!NumberUtils.maxed(picked.length, max) && !this.isEmpty(indexes)) {
 
-            const pickedIndex: index = this.pickElement(indexes) as index;
-            this.deleteMatch(indexes, index => index == pickedIndex, 0, 1);
-            const element: T = array[pickedIndex];
-            pickedElements.push(element);
+            const index: index = this.pickElement(array, undefined, true) as index;
+            const element: T = array[index];
+            picked.push(element);
 
         }
-        return pickedElements;
+        return picked;
 
     }
+
+    public static shuffle<T>(array: T[]): T[] {
+
+        const shuffled: T[] = ArrayUtils.pickElements(array);
+        return shuffled;
+
+    }
+
+    public static toSet<T>(array: T[]): Set<T> {
+
+        return new Set(array);
+
+    }
+
+
 
     private static hasZeroIndex<T>(_: T, index: index): boolean {
 

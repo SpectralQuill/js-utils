@@ -42,6 +42,8 @@ export default class Loop {
 
     }
 
+    
+
     private stop(): boolean {
 
         return !(this.condition?.() ?? true);

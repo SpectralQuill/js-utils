@@ -1,3 +1,6 @@
+import ArrayUtils from "./array";
+import NumberUtils from "./number";
+
 module SetUtils {
 
     export type callback<T, R> = (element: T, set: Set<T>) => R;
@@ -6,6 +9,7 @@ module SetUtils {
         element2: T | undefined,
         set: Set<T>
     ) => boolean;
+    export type deleted<T> = Set<T>;
     export type match<T> = callback<T, boolean>;
 
 }
@@ -15,11 +19,11 @@ export default class SetUtils {
     /*
 
         To add:
-            pickElement()
-            pickElements()
         
         To change:
-            toArray(): shuffle too
+            pickElement() & pickElements():
+                match
+                length -> max
     
     */
 
@@ -42,27 +46,39 @@ export default class SetUtils {
 
     }
 
-    public static countMatch<T>(set: Set<T>, match?: SetUtils.match<T>): int {
+    public static countMatch<T>(set: Set<T>, match?: SetUtils.match<T>, max?: length): length {
 
-        let count: int = 0;
-        set.forEach(element => {
+        let count: length = 0;
+        try {
 
-            if(match?.(element, set)) count++;
+            set.forEach(element => {
 
-        });
+                if(match?.(element, set)) count++;
+                if(NumberUtils.maxed(count, max)) throw undefined;
+    
+            });
+
+        } catch(_) {}
         return count;
 
     }
 
-    public static deleteMatch<T>(set: Set<T>, match?: SetUtils.match<T>): Set<T> {
+    public static deleteMatch<T>(set: Set<T>, match?: SetUtils.match<T>, max?: length): SetUtils.deleted<T> {
 
+        const array: T[] = this.toArray(set, true);
+        const toDelete: T[] = ArrayUtils.deleteMatch(array, element => match?.(element, set) ?? true, 0, max);
         const deleted: Set<T> = new Set();
-        set.forEach(element => {
+        try {
 
-            if(match?.(element, set)) set.delete(element);
-            deleted.add(element);
+            toDelete.forEach(element => {
 
-        });
+                set.delete(element);
+                deleted.add(element);
+                if(NumberUtils.maxed(deleted.size, max)) throw undefined;
+
+            });
+
+        } catch(_) {}
         return deleted;
 
     }
@@ -79,7 +95,7 @@ export default class SetUtils {
 
     }
 
-    public static every<T>(set: Set<T>, predicate: SetUtils.callback<T, boolean>): boolean {
+    public static every<T>(set: Set<T>, predicate: SetUtils.match<T>): boolean {
 
         let every: boolean = true;
         try {
@@ -124,6 +140,12 @@ export default class SetUtils {
 
     }
 
+    public static isEmpty<T>(set: Set<T>): boolean {
+
+        return set.size == 0;
+
+    }
+
     public static map<T, R>(set: Set<T>, callbackEach: SetUtils.callback<T, R>): Set<R> {
 
         const mapped: Set<R> = new Set();
@@ -144,7 +166,23 @@ export default class SetUtils {
 
     }
 
-    public static some<T>(set: Set<T>, predicate: SetUtils.callback<T, boolean>): boolean {
+    public static pickElement<T>(set: Set<T>, match?: SetUtils.match<T>): canBeUndefined<T> {
+
+        const array: T[] = this.toArray(set);
+        const element: canBeUndefined<T> = ArrayUtils.pickElement(array);
+        return element;
+
+    }
+
+    public static pickElements<T>(set: Set<T>, length: length = set.size): Set<T> {
+
+        const array: T[] = this.toArray(set);
+        const picked: T[] = ArrayUtils.pickElements(array, length);
+        return new Set(picked);
+
+    }
+
+    public static some<T>(set: Set<T>, predicate: SetUtils.match<T>): boolean {
 
         let some: boolean = false;
         try {
@@ -167,7 +205,9 @@ export default class SetUtils {
 
     public static toArray<T>(set: Set<T>, shuffle: boolean = false): T[] {
 
-        return Array.from(set);
+        let array: T[] = Array.from(set);
+        if(shuffle) array = ArrayUtils.shuffle(array);
+        return array;
 
     }
 

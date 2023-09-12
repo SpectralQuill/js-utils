@@ -68,6 +68,12 @@ export default class NumberUtils {
 
     }
 
+    public static maxed(number: frac, max?: frac): boolean {
+
+        return max == undefined ? false : (number >= max);
+
+    }
+
     public static mostDecimalPlaces(...numbers: frac[]): canBeUndefined<frac> {
 
         let mostDecimalPlaces: canBeUndefined<frac>;
