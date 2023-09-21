@@ -22,15 +22,25 @@ export default class ArrayUtils {
     /*
     
         To add:
+
+            new firstElement()
+            lastElement()
+            lastMatch()
         
         To change:
+
+            lots: start parameter shouldbe index | match, also add forward
+
+            firstElement(): rename to firstMatch()
             indexes(): match & start
             pickElement() & pickElements():
                 match
                 length -> max
+                deleteElement
             pickElements():
                 - match
                 - apply match first then keep list of indexes
+                deleteElement
     
     */
 
@@ -213,6 +223,56 @@ export default class ArrayUtils {
 
     }
 
+    public static iterateFromMatch<T>(
+        array: T[],
+        match: ArrayUtils.match<T>,
+        callbackEach?: ArrayUtils.callback<T, unknown>,
+        callbackLast?: ArrayUtils.callback<T, void>,
+        forward: boolean = true,
+        max: int = array.length
+    ): int {
+
+        let count: int = 0;
+        const { length } = array;
+        const start: index = forward ? 0 : (this.lastIndex(array) as index);
+        const period: int = forward ? 1 : -1;
+        const condition = (index: index) => {
+
+            const indexInRange: boolean = forward ? (index < length) : (index >= 0);
+            const countInRange: boolean = count < max;
+            return indexInRange && countInRange;
+
+        };
+        const counterCallbackEach = (index: index) => {
+
+            count++;
+            const element: T = array[index];
+            return callbackEach?.(element, index, array);
+
+        }
+        const counter: Counter = new Counter(
+            start,
+            period,
+            condition,
+            index => {
+
+                const element: T = array[index];
+                const isMatch: boolean = match(element, index, array);
+                if(isMatch) return counterCallbackEach;
+
+            },
+            index => {
+
+                const element: T = array[index];
+                callbackLast?.(element, index, array);
+
+            }
+        );
+        for(let _ of counter.iterate()) {}
+        return count;
+
+    }
+
     public static lastIndex<T>(array: T[], nonnegative: boolean = true): canBeUndefined<index> {
 
         const index: index = length - 1;
@@ -323,7 +383,8 @@ export default class ArrayUtils {
     }
 
     public static pickElements<T>(
-        array: T[], match?: ArrayUtils.match<T>,
+        array: T[],
+        match?: ArrayUtils.match<T>,
         max: length = array.length,
         deleteElements: boolean = false
     ): T[] {

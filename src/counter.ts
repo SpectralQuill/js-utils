@@ -27,14 +27,18 @@ export default class Counter {
 
         const { start, period } = this;
         let count = start;
+        let callbackEach: canBeUndefined<Counter.callback<unknown>> = this.callbackEach;
         const loop: Loop = new Loop(
             () => this.condition?.(count, start, period) ?? true,
             () => {
                 
-                const returnValue = this.callbackEach?.(count, start, period);
-                if(NumberUtils.isNumber(returnValue)) count += returnValue as number;
+                const callbackReturn = callbackEach?.(count, start, period);
+                if(NumberUtils.isNumber(callbackReturn)) count += callbackReturn as number;
                 count += period;
-                return returnValue;
+                if(callbackReturn instanceof Function)
+                    callbackEach = callbackReturn as Counter.callback<unknown>;
+                else
+                    return callbackReturn;
 
             },
             () => this.callbackLast?.(count, start, period)

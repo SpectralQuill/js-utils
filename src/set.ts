@@ -24,6 +24,7 @@ export default class SetUtils {
             pickElement() & pickElements():
                 match
                 length -> max
+                deleteElement
     
     */
 
@@ -174,10 +175,14 @@ export default class SetUtils {
 
     }
 
-    public static pickElements<T>(set: Set<T>, length: length = set.size): Set<T> {
+    public static pickElements<T>(
+        set: Set<T>,
+        length: length = set.size,
+        deleteElements: boolean = false
+    ): Set<T> {
 
         const array: T[] = this.toArray(set);
-        const picked: T[] = ArrayUtils.pickElements(array, length);
+        const picked: T[] = ArrayUtils.pickElements(array, undefined, length);
         return new Set(picked);
 
     }
