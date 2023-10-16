@@ -1,18 +1,30 @@
 export default class NumberUtils {
 
-    public static negative( number: number ): number {
+    public static isNegative( number: number ): boolean {
 
-        return -this.positive(number);
+        return number < 0;
 
     }
 
-    public static positive( number: number ): number {
+    public static isPositive( number: number ): boolean {
+
+        return number > 0;
+
+    }
+
+    public static toNegative( number: number ): number {
+
+        return -this.toPositive(number);
+
+    }
+
+    public static toPositive( number: number ): number {
 
         return Math.abs(number);
 
     }
 
-    public static reverse( number: number ): number {
+    public static toReverse( number: number ): number {
 
         return -number;
 

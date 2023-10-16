@@ -23,13 +23,25 @@ export default class Counter {
 
     public backward(): number {
 
-        return this.period = NumberUtils.negative( this.period );
+        return this.period = NumberUtils.toNegative( this.period );
 
     }
 
     public forward(): number {
 
-        return this.period = NumberUtils.positive( this.period );
+        return this.period = NumberUtils.toPositive( this.period );
+
+    }
+
+    public isBackward() {
+
+        return NumberUtils.isNegative( this.period );
+
+    }
+
+    public isForward() {
+
+        return NumberUtils.isPositive( this.period );
 
     }
 
@@ -41,13 +53,25 @@ export default class Counter {
 
     public reverse(): number {
 
-        return this.period = NumberUtils.reverse( this.period );
+        return this.period = NumberUtils.toReverse( this.period );
 
     }
 
     public skip( skip: number ): number {
 
         return this.count += this.period * skip;
+
+    }
+
+    public toNumber(): number {
+
+        return this.count;
+
+    }
+
+    public toString(): string {
+
+        return this.toNumber().toString();
 
     }
 
