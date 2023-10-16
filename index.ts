@@ -1,4 +1,4 @@
-import ArrayUtils from "./src/array";
+import ArrayUtils from "./src/ArrayUtils";
 export { ArrayUtils };
 
 import BooleanUtils from "./src/boolean";
