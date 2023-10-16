@@ -7,7 +7,7 @@ export { BooleanUtils };
 import CollectionUtils from "./src/collection";
 export { CollectionUtils };
 
-import Counter from "./src/counter";
+import Counter from "./src/Counter2";
 export { Counter };
 
 import FunctionUtils from "./src/function";
