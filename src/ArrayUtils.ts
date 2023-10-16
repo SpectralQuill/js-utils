@@ -37,10 +37,10 @@ export default class ArrayUtils {
             ),
             control: ArrayUtils.control = {
 
-                backward: counter.backward,
-                forward: counter.forward,
-                reverse: counter.reverse,
-                skip: counter.skip
+                backward: () => counter.backward(),
+                forward: () => counter.forward(),
+                reverse: () => counter.reverse(),
+                skip: ( skip ) => counter.skip( skip )
 
             }
         ;
