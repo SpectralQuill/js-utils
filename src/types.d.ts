@@ -1,4 +1,5 @@
 type canBeUndefined<T> = T | undefined;
+type canBeVoid<T> = T | void;
 type collection<T> = T[] | Set<T>;
 type frac = number;
 type index = int;

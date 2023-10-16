@@ -5,6 +5,15 @@ import Range from "./range";
 module ArrayUtils {
 
     export type callback<T, R> = (element: T, index: index, array: T[]) => R;
+    export type callbackEach<T> = callback<T, callbackEachReturn<T>>;
+    export type callbackEachReturn<T> = canBeVoid<[
+        breakLoop?: boolean,
+        newCallbackEach?: callbackEach<T>,
+        newCallbackLast?: callbackLast<T>,
+        skip?: int,
+        newForward?: boolean
+    ]>;
+    export type callbackLast<T> = callback<T, void>;
     export type compare<T> = (
         element1: T,
         element2: canBeUndefined<T>,
@@ -13,24 +22,34 @@ module ArrayUtils {
         array: T[]
     ) => boolean;
     export type deleted<T> = T[];
-    export type match<T> = callback<T, boolean>;
+    export type match<T> = callback<T, matchReturn<T>>;
+    export type matchReturn<T> = [
+        isMatch?: boolean,
+        breakLoop?: boolean,
+        newMatch?: match<T>,
+        newForward?: boolean
+    ];
 
 }
 
 export default class ArrayUtils {
 
     /*
+
+        Redo:
+            iterate should also count newForward
     
         To add:
 
-            new firstElement()
-            lastElement()
-            lastMatch()
+            findMatch that can be stopped
         
         To change:
 
-            lots: start parameter shouldbe index | match, also add forward
+            lots: use match & forward instead of start
+            lots: max should be generalized to condition
+            lots: match should return tuple
 
+            deleteIndexes() is wrong
             firstElement(): rename to firstMatch()
             indexes(): match & start
             pickElement() & pickElements():
@@ -58,44 +77,42 @@ export default class ArrayUtils {
 
     }
 
-    public static countMatch<T>(
-        array: T[], match?: ArrayUtils.match<T>,
-        start: index = 0,
-        max?: length
-    ): length {
-
-        let count: length = 0;
-        this.iterateFrom(array, start, (element, index) => {
-
-            if(match?.(element, index, array) ?? true) count++;
-            if(NumberUtils.maxed(count, max)) return false;
-
-        });
-        return count;
-
-    }
-
-    public static deleteMatch<T>(
+    public static deleteMatches<T>(
         array: T[],
         match?: ArrayUtils.match<T>,
-        start: index = 0,
-        max?: length
+        forward: boolean = true
     ): ArrayUtils.deleted<T> {
 
         const deleted: ArrayUtils.deleted<T> = [];
-        const forward: boolean = !NumberUtils.isNegative(start);
-        const stepBack: int = forward ? -1 : 1;
-        this.iterateFrom(array, start, (element, index) => {
+        this.iterate(
+            array,
+            (element, index, array) => {
 
-            if(match?.(element, index, array) ?? true) {
+                let breakLoop = false;
+                let skip;
+                let forward;
+                const returnValue: ArrayUtils.callbackEachReturn<T> = [ true ];
+                const matchReturn = match?.(element, index, array);
+                if(matchReturn != undefined) {
 
-                array.splice(index, 1);
-                deleted.push(element);
-                return NumberUtils.maxed(deleted.length, max) ? false : stepBack;
+                    const [ isMatch, breakLoop, newMatch, newForward ] = matchReturn;
+                    if(isMatch) {
 
-            }
+                        array.splice(index, 1);
+                        returnValue[3] = -1;
 
-        });
+                    }
+                    if(breakLoop != undefined) returnValue[0] = breakLoop;
+                    if(newMatch instanceof Function) match = newMatch;
+                    if(newForward != undefined) forward = newForward;
+
+                }
+                return returnValue;
+
+            },
+            undefined,
+            forward
+        );
         return deleted;
 
     }
@@ -123,24 +140,10 @@ export default class ArrayUtils {
 
     }
 
-    public static firstElement<T>(
-        array: T[],
-        match: ArrayUtils.match<T> = this.hasZeroIndex,
-        start: index = 0
-    ): canBeUndefined<T> {
+    public static firstElement<T>(array: T[]): canBeUndefined<T> {
 
-        let firstElement: canBeUndefined<T>;
-        this.iterateFrom(array, start, (element, index) => {
-
-            if(match(element, index, array)) {
-                
-                firstElement = element;
-                return false;
-
-            }
-
-        });
-        return firstElement;
+        const element: T = array[0];
+        return element;
 
     }
 
@@ -185,91 +188,66 @@ export default class ArrayUtils {
 
     }
 
-    public static iterateFrom<T>(
+    public static iterate<T>(
         array: T[],
-        start: index = 0,
-        callbackEach?: ArrayUtils.callback<T, unknown>,
-        callbackLast?: ArrayUtils.callback<T, void>
+        callbackEach?: ArrayUtils.callbackEach<T>,
+        callbackLast?: ArrayUtils.callbackLast<T>,
+        forward: boolean = true
     ): int {
 
         let count: int = 0;
         if(this.isEmpty(array)) return count;
-        const forward: boolean = !NumberUtils.isNegative(start);
+        const start: index = forward ? 0 : (this.lastIndex(array) as index);
         const period: int = forward ? 1 : -1;
-        const condition: (index: index) => boolean =
-            forward ? (index => index < array.length) :
-            (index => index >= (this.negativeIndex(array, 0) as index))
-        ;
-        const counter = new Counter(
+        const counter: Counter = new Counter(
             start,
             period,
-            condition,
+            index => (forward ? (index < length) : (index >= 0)),
             index => {
 
                 count++;
-                const element: T = array.at(index) as T;
-                return callbackEach?.(element, index, array);
+                const element: T = array[index];
+                const callbackEachReturn: ArrayUtils.callbackEachReturn<T> =
+                    callbackEach?.(element, index, array)
+                ;
+                if(callbackEachReturn != undefined) {
+
+                    const [
+                        breakLoop,
+                        newCallbackEach,
+                        newCallbackLast,
+                        skip,
+                        newForward
+                    ] = callbackEachReturn;
+                    if(newCallbackEach instanceof Function) callbackEach = newCallbackEach;
+                    if(newCallbackLast instanceof Function) callbackLast = newCallbackLast;
+                    const periodAddend: canBeUndefined<int> =
+                        (skip != undefined ? (period * skip) : undefined)
+                    ;
+                    if(newForward != undefined) forward = newForward;
+                    return [ breakLoop, undefined, undefined, periodAddend ];
+
+                }
 
             },
             index => {
 
-                const element: T = array.at(index) as T;
+                const element: T = array[index];
                 callbackLast?.(element, index, array);
 
             }
         );
-        for(let _ of counter.iterate()) {}
+        for(let _ of counter.iterator()) {}
         return count;
 
     }
 
-    public static iterateFromMatch<T>(
-        array: T[],
-        match: ArrayUtils.match<T>,
-        callbackEach?: ArrayUtils.callback<T, unknown>,
-        callbackLast?: ArrayUtils.callback<T, void>,
-        forward: boolean = true,
-        max: int = array.length
-    ): int {
+    public static lastElement<T>(array: T[]): canBeUndefined<T> {
 
-        let count: int = 0;
         const { length } = array;
-        const start: index = forward ? 0 : (this.lastIndex(array) as index);
-        const period: int = forward ? 1 : -1;
-        const condition = (index: index) => {
-
-            const indexInRange: boolean = forward ? (index < length) : (index >= 0);
-            const countInRange: boolean = count < max;
-            return indexInRange && countInRange;
-
-        };
-        const counterCallbackEach = (index: index) => {
-
-            count++;
-            const element: T = array[index];
-            return callbackEach?.(element, index, array);
-
-        }
-        const counter: Counter = new Counter(
-            start,
-            period,
-            condition,
-            index => {
-
-                const element: T = array[index];
-                const isMatch: boolean = match(element, index, array);
-                if(isMatch) return counterCallbackEach;
-
-            },
-            index => {
-
-                const element: T = array[index];
-                callbackLast?.(element, index, array);
-
-            }
-        );
-        for(let _ of counter.iterate()) {}
-        return count;
+        const lastIndex: index = length - 1;
+        const element: T = array[lastIndex];
+        return element;
 
     }
 
@@ -282,8 +260,8 @@ export default class ArrayUtils {
 
     public static middleIndex<T>(
         array: T[],
-        percentage: frac = 0.5,
-        nonnegative: boolean = true
+        nonnegative: boolean = true,
+        percentage: frac = 0.5
     ): canBeUndefined<index> {
 
         const { length } = this;
