@@ -258,6 +258,7 @@ export default class ArrayUtils {
 
     }
 
+    
     public static middleIndex<T>(
         array: T[],
         nonnegative: boolean = true,
