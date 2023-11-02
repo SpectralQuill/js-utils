@@ -1,2 +1,1 @@
-import { ArrayUtils } from "./index.js";
-ArrayUtils.log();
+"use strict";

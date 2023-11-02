@@ -2,7 +2,7 @@
   "name": "ts-utils",
   "version": "1.0.0",
   "description": "Utilities for JavaScript objects and types.",
-  "main": "js/index.js",
+  "main": "index.js",
   "type": "module",
   "repository": {
     "type": "git",
