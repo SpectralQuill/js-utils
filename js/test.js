@@ -1,1 +1,2 @@
-"use strict";
+import ArrayUtils from "./ArrayUtils.js";
+ArrayUtils.log();
