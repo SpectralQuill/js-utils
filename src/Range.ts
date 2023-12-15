@@ -27,22 +27,23 @@ export default class Range {
     }
 
     public inRange( number: frac ): boolean {
-  
+
         const
-            { start, end, includeStart, includeEnd, period } = this,
-            moreThanStart: boolean = ( includeStart ? ( number >= start ) : ( number > start ) ),
-            lessThanEnd: boolean = ( includeEnd ? ( number <= end ) : ( number < end ) ),
+            { start, end, period } = this,
             integerIndex: boolean = NumberUtils.isInteger(
                 ( this.isForward() ? ( number - start ) : ( end - number ) ) / period
             )
         ;
-        return ( moreThanStart && lessThanEnd ) && ( !this.hasPeriod() || integerIndex );
-    
+        return (
+            this.moreThanStart( number ) && this.lessThanEnd( number )
+            && ( !this.hasPeriod() || integerIndex )
+        );
+
     }
 
     public isBackward(): boolean {
 
-        return !this.isForward;
+        return !this.isForward();
     
     }
     
@@ -50,6 +51,20 @@ export default class Range {
     
         return this.period > 0;
     
+    }
+
+    private lessThanEnd( number: frac ): boolean {
+
+        const { end, includeEnd } = this;
+        return includeEnd ? ( number <= end ) : ( number < end )
+
+    }
+
+    private moreThanStart( number: frac ): boolean {
+
+        const { start, includeStart } = this;
+        return includeStart ? ( number >= start ) : ( number > start )
+
     }
 
     public pickNumber(): frac {

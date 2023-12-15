@@ -8,12 +8,14 @@ ArrayUtils
 copy( array, start, end ): T[]
 limit( array, length ): T[] // deleted
 most( array, compare, forward ): T
+inRange // turn integerIndex into its own method
 percentageElement( Percentage = 50% ): T
 percentageIndex( Percentage = 50% ): index
 pickElement( array, match?, keep ): T
 pickElements( array, max, match?, keep ): T[]
 pickIndex( array, match? ): index
 pickIndexes( array, length, match? ): index[]
+pickNumber // fix this in code
 shuffle( array ): void
 similar( array1, array2 ): boolean
 
