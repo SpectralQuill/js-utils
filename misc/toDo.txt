@@ -1,0 +1,31 @@
+Compilation
+in tsconfig, add
+    compileOnSave
+in compilerOptions, add
+    noEmitOnError
+
+ArrayUtils
+copy( array, start, end ): T[]
+limit( array, length ): T[] // deleted
+most( array, compare, forward ): T
+percentageElement( Percentage = 50% ): T
+percentageIndex( Percentage = 50% ): index
+pickElement( array, match?, keep ): T
+pickElements( array, max, match?, keep ): T[]
+pickIndex( array, match? ): index
+pickIndexes( array, length, match? ): index[]
+shuffle( array ): void
+similar( array1, array2 ): boolean
+
+Range
+get length: length
+addLeft( addend ): number
+addMiddle( addend ): number
+addRight( addend ): number
+cut( number ): [ left: Range, right: Range ]
+limit( limit ): number
+multiplyLeft( factor ): number
+multiplyMiddle( factor ): number
+multiplyRight( factor ): number
+pickNumber(): frac
+toString() -> should account for period

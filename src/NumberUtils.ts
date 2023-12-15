@@ -1,33 +1,49 @@
 export default class NumberUtils {
 
-    public static isNegative( number: number ): boolean {
+    public static isInteger( number: frac ): boolean {
+
+        return number % 1 == 0;
+
+    }
+
+    public static isNegative( number: frac ): boolean {
 
         return number < 0;
 
     }
 
-    public static isPositive( number: number ): boolean {
+    public static isNonnegative( number: frac ): boolean {
+
+        return number >= 0;
+
+    }
+
+    public static isPositive( number: frac ): boolean {
 
         return number > 0;
 
     }
 
-    public static toNegative( number: number ): number {
+    public static toNegative( number: frac ): frac {
 
-        return -this.toPositive(number);
-
-    }
-
-    public static toPositive( number: number ): number {
-
-        return Math.abs(number);
+        return -Math.abs( number );
 
     }
 
-    public static toReverse( number: number ): number {
+    public static toOpposite( number: frac ): frac {
 
-        return -number;
+        return (
+            this.isPositive( number ) ? this.toNegative( number ) :
+            this.isNegative( number ) ? this.toPositive( number ) :
+            number
+        );
 
     }
 
+    public static toPositive( number: frac ): frac {
+
+        return Math.abs( number );
+
+    }
+    
 }

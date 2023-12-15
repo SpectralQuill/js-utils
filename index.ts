@@ -1,2 +1,2 @@
-import ArrayUtils from "./ts/ArrayUtils";
+import ArrayUtils from "./src/ArrayUtils";
 export { ArrayUtils };

@@ -10,8 +10,8 @@
   },
   "scripts": {
     "compile": "npx tsc",
-    "test": "node js/test.js",
-    "compile:test": "npm run compile && npm test"
+    "compile:test": "npm run compile && npm test",
+    "test": "node test/test.js"
   },
   "keywords": [
     "typescript"
