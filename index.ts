@@ -1,13 +1,19 @@
 import ArrayUtils from "./src/ArrayUtils";
 export { ArrayUtils };
 
-import Counter from "./src/ArrayUtils";
+import Comparison from "./src/Comparison";
+export { Comparison };
+
+import Counter from "./src/Counter";
 export { Counter };
 
-import NullishUtils from "./src/ArrayUtils";
+import FracRange from "./src/FracRange";
+export { FracRange };
+
+import NullishUtils from "./src/NullishUtils";
 export { NullishUtils };
 
-import NumberUtils from "./src/ArrayUtils";
+import NumberUtils from "./src/NumberUtils";
 export { NumberUtils };
 
 import Range from "./src/Range";

@@ -1,12 +1,11 @@
-import Counter from "./Counter.js";
 import NullishUtils from "./NullishUtils.js";
 import NumberUtils from "./NumberUtils.js";
-import Range from "./Range.js";
+import Counter from "./Counter.js";
+import FracRange from "./FracRange.js";
 
 module ArrayUtils {
 
     export type callback< T, R > = ( element: T, index: index, array: T[], counter: Counter ) => R;
-    export type compare< T > = ( element1: T, element2: T ) => boolean;
     export type match< T > = callback< T, boolean >;
 
 }
@@ -84,9 +83,9 @@ export default class ArrayUtils {
 
         const
             { length } = array,
-            range = new Range( -length, length, true, false, 1 )
+            range = new FracRange( -length, length, true, false, 1 )
         ;
-        return range.inRange( index );
+        return range.hasInRange( index );
     
     }
 
@@ -96,9 +95,9 @@ export default class ArrayUtils {
 
         const
             { length } = array,
-            range = new Range( -length, 0, true, false, 1 )
+            range = new FracRange( -length, 0, true, false, 1 )
         ;
-        return range.inRange( index );
+        return range.hasInRange( index );
 
     }
 
@@ -106,9 +105,9 @@ export default class ArrayUtils {
 
         const
             { length } = array,
-            range = new Range( 0, length, true, false, 1 )
+            range = new FracRange( 0, length, true, false, 1 )
         ;
-        return range.inRange( index );
+        return range.hasInRange( index );
 
     }
 

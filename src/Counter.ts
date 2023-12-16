@@ -1,4 +1,4 @@
-import NumberUtils from "./NumberUtils.js";
+import NumberUtils from "./NumberUtils";
 
 export default class Counter {
 
