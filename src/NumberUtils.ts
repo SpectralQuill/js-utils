@@ -1,3 +1,5 @@
+import { frac } from "./types.js";
+
 export default class NumberUtils {
 
     public static isInteger( number: frac ): boolean {

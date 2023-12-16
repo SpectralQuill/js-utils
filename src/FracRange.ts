@@ -1,18 +1,15 @@
-import Comparison from "./Comparison";
-import NumberUtils from "./NumberUtils";
-import Range from "./Range";
+import Comparison from "./Comparison.js";
+import NumberUtils from "./NumberUtils.js";
+import Range from "./Range.js";
+import { comparator, frac } from "./types.js";
 
 export default class FracRange extends Range< frac > {
 
-    private static compare = ( number1: frac, number2: frac ): Comparison => {
-
-        return (
-            number1 > number2 ? Comparison.MoreThan
-            : number1 < number2 ? Comparison.LessThan
-            : Comparison.Equal
-        );
-
-    }
+    private static compare: comparator< frac > = ( number1, number2 ) => (
+        number1 > number2 ? Comparison.MoreThan
+        : number1 < number2 ? Comparison.LessThan
+        : Comparison.Equal
+    );
 
     constructor(
         start: frac, end: frac, includeStart: boolean = true, includeEnd: boolean = true,

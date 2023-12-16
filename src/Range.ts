@@ -1,17 +1,12 @@
-import Comparison from "./Comparison"
-
-module Range {
-
-    export type compare< T > = ( value1: T, value2: T ) => Comparison
-
-}
+import Comparison from "./Comparison.js";
+import { comparator } from "./types.js";
 
 export default class Range< T > {
 
     constructor(
         protected readonly start: T,
         protected readonly end: T,
-        protected readonly compare: Range.compare< T >,
+        protected readonly compare: comparator< T >,
         protected readonly includeStart: boolean = true,
         protected readonly includeEnd: boolean = true
     ) {
