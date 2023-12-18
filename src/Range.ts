@@ -3,9 +3,9 @@ import { comparator, frac } from "./types.js";
 export default class Range< T > {
 
     constructor(
-        protected readonly start: T,
-        protected readonly end: T,
-        protected readonly compare: comparator< T >,
+        public readonly start: T,
+        public readonly end: T,
+        public readonly compare: comparator< T >,
         protected readonly includeStart: boolean = true,
         protected readonly includeEnd: boolean = true
     ) {
