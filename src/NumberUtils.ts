@@ -1,13 +1,8 @@
-import Comparison from "./Comparison.js";
 import { comparator, frac } from "./types.js";
 
 export default class NumberUtils {
 
-    public static compare: comparator< frac > = ( number1, number2 ) => (
-        number1 > number2 ? Comparison.MoreThan
-        : number1 < number2 ? Comparison.LessThan
-        : Comparison.Equal
-    );
+    public static compare: comparator< frac > = ( number1, number2 ) => ( number1 - number2 );
 
     public static isInteger( number: frac ): boolean {
 

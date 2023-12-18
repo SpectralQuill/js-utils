@@ -1,9 +1,6 @@
 import ArrayUtils from "./src/ArrayUtils";
 export { ArrayUtils };
 
-import Comparison from "./src/Comparison";
-export { Comparison };
-
 import Counter from "./src/Counter";
 export { Counter };
 

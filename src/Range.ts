@@ -1,5 +1,4 @@
-import Comparison from "./Comparison.js";
-import { comparator } from "./types.js";
+import { comparator, frac } from "./types.js";
 
 export default class Range< T > {
 
@@ -11,7 +10,7 @@ export default class Range< T > {
         protected readonly includeEnd: boolean = true
     ) {
 
-        if( compare( start, end ).isMoreThan() ) {
+        if( compare( start, end ) > 0 ) {
 
             this.start = end;
             this.end = start;
@@ -27,8 +26,8 @@ export default class Range< T > {
             comparisonStart = this.compare( value, start ), comparisonEnd = this.compare( value, end )
         ;
         return (
-            ( includeStart ? comparisonStart.isMoreThanOrEqual() : comparisonStart.isMoreThan() )
-            && ( includeEnd ? comparisonEnd.isLessThanOrEqual() : comparisonEnd.isLessThan() )
+            ( includeStart ? comparisonStart >= 0 : comparisonStart > 0 )
+            && ( includeEnd ? comparisonEnd <= 0 : comparisonEnd < 0 )
         );
 
     }
