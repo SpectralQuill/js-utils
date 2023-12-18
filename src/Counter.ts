@@ -1,5 +1,4 @@
 import NumberUtils from "./NumberUtils.js";
-import { frac, int } from "./types.js";
 
 export default class Counter {
 

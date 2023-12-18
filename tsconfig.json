@@ -8,6 +8,7 @@
     "target": "ESNext"
   },
   "include": [
-    "src"
+    "src",
+    "types.d.ts"
   ]
 }

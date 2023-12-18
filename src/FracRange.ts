@@ -1,6 +1,5 @@
 import NumberUtils from "./NumberUtils.js";
 import Range from "./Range.js";
-import { comparator, frac } from "./types.js";
 
 export default class FracRange extends Range< frac > {
 

@@ -1,6 +1,5 @@
 import ArrayUtils from "./ArrayUtils.js";
 import Range from "./Range.js";
-import { frac } from "./types.js";
 
 const a: frac = 91;
 console.log( a );

@@ -1,5 +1,3 @@
-import { comparator, frac } from "./types.js";
-
 export default class Range< T > {
 
     constructor(

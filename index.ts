@@ -1,3 +1,5 @@
+import "./types";
+
 import ArrayUtils from "./src/ArrayUtils";
 export { ArrayUtils };
 
@@ -15,5 +17,3 @@ export { NumberUtils };
 
 import Range from "./src/Range";
 export { Range };
-
-export { comparator, frac, int } from "./src/types";

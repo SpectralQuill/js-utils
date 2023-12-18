@@ -2,7 +2,6 @@ import Counter from "./Counter.js";
 import FracRange from "./FracRange.js";
 import NullishUtils from "./NullishUtils.js";
 import NumberUtils from "./NumberUtils.js";
-import { index, int } from "./types.js";
 
 module ArrayUtils {
 

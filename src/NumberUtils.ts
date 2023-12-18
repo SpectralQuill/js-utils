@@ -1,5 +1,3 @@
-import { comparator, frac } from "./types.js";
-
 export default class NumberUtils {
 
     public static compare: comparator< frac > = ( number1, number2 ) => ( number1 - number2 );
