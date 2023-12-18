@@ -16,4 +16,4 @@ export { NumberUtils };
 import Range from "./src/Range";
 export { Range };
 
-export * from "./src/types";
+export { comparator, frac, int } from "./src/types";
