@@ -1,5 +1,3 @@
-import "./src/types";
-
 import ArrayUtils from "./src/ArrayUtils";
 export { ArrayUtils };
 
