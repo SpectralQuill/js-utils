@@ -5,8 +5,7 @@
     "outDir": "test",
     "strict": true,
     "skipLibCheck": true,
-    "target": "ESNext",
-    "types": [ "./types" ]
+    "target": "ESNext"
   },
-  "include": [ "src" ]
+  "include": [ "src", "./index.ts" ]
 }
