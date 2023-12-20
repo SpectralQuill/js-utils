@@ -8,7 +8,7 @@ export default class FracRange extends Range< frac > {
         private readonly period: frac = 0
     ) {
 
-        super( start, end, NumberUtils.compare, includeStart, includeEnd );
+        super( start, end, NumberUtils.fracCompare, includeStart, includeEnd );
 
     }
 

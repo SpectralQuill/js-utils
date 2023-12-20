@@ -1,6 +1,22 @@
-export default class NumberUtils {
+class NumberUtils {
 
-    public static compare: comparator< frac > = ( number1, number2 ) => ( number1 - number2 );
+    public static fracArrayCompare: comparator< frac[] > = ( array1, array2 ) => {
+
+        let
+            index: int, length: int = Math.max( array1.length, array2.length ),
+            number1: frac = 0, number2: frac = 0
+        ;
+        for( index = 0; number1 === number2 && index < length; index++ ) {
+
+            number1 = array1[ index ] ?? 0;
+            number2 = array2[ index ] ?? 0;
+
+        } 
+        return this.fracCompare( number1, number2 );
+
+    };
+
+    public static fracCompare: comparator< frac > = ( number1, number2 ) => ( number1 - number2 );
 
     public static isInteger( number: frac ): boolean {
 
@@ -49,3 +65,5 @@ export default class NumberUtils {
     }
     
 }
+
+export default NumberUtils;
