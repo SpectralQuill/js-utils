@@ -1,7 +1,7 @@
 import ArrayUtils from "./ArrayUtils.js";
 import Range from "./Range.js";
 
-const a: frac = 91;
+const a: frac = 890;
 console.log( a );
 
 // enum Relations {

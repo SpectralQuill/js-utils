@@ -2,7 +2,7 @@
   "name": "ts-utils",
   "version": "1.0.0",
   "description": "Utilities for JavaScript objects and types.",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "type": "module",
   "repository": {
     "type": "git",
@@ -11,11 +11,8 @@
   "scripts": {
     "compile": "npx tsc",
     "compile:test": "npm run compile && npm test",
-    "test": "node test/test.js"
+    "test": "node js/test.js"
   },
-  "keywords": [
-    "typescript"
-  ],
   "author": "Gian Tristian G. Apostol",
   "license": "GPL-3.0-only",
   "bugs": {
@@ -24,5 +21,6 @@
   "homepage": "https://github.com/SpectralQuill/ts-utils#readme",
   "devDependencies": {
     "typescript": "^5.1.6"
-  }
+  },
+  "types": "src/types.d.ts"
 }
