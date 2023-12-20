@@ -1,20 +1,15 @@
 {
-
   "compilerOptions": {
-
     "allowJs": false,
-    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
     "module": "ESNext",
-    "noEmit": true,
+    "outDir": "src",
     "strict": true,
     "skipLibCheck": true,
     "target": "ESNext",
     "types": [ "./src/types.d.ts" ]
 
   },
-  "include": [ "src", "dev" ],
-  "exclude": [ "misc", "node_modules" ]
-  
+  "include": [ "src" ],
+  "exclude": [ "node_modules", "test", "dev", "misc" ]
 }

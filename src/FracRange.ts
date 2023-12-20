@@ -1,5 +1,5 @@
-import NumberUtils from "./NumberUtils.js";
-import Range from "./Range.js";
+import NumberUtils from "./NumberUtils";
+import Range from "./Range";
 
 export default class FracRange extends Range< frac > {
 

@@ -1,17 +1,19 @@
-import ArrayUtils from "./ArrayUtils.js";
+import "./types.d.ts";
+
+import ArrayUtils from "./ArrayUtils";
 export { ArrayUtils };
 
-import Counter from "./Counter.js";
+import Counter from "./Counter";
 export { Counter };
 
-import FracRange from "./FracRange.js";
+import FracRange from "./FracRange";
 export { FracRange };
 
-import NullishUtils from "./NullishUtils.js";
+import NullishUtils from "./NullishUtils";
 export { NullishUtils };
 
-import NumberUtils from "./NumberUtils.js";
+import NumberUtils from "./NumberUtils";
 export { NumberUtils };
 
-import Range from "./Range.js";
+import Range from "./Range";
 export { Range };

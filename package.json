@@ -9,9 +9,9 @@
     "url": "git+https://github.com/SpectralQuill/js-utils.git"
   },
   "scripts": {
-    "compile": "npx tsc",
+    "compile": "node dev/compile.js",
     "compile:test": "npm run compile && npm test",
-    "test": "node js/test.js"
+    "test": "node dev/test.js"
   },
   "author": "Gian Tristian G. Apostol",
   "license": "GPL-3.0-only",
@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/SpectralQuill/ts-utils#readme",
   "devDependencies": {
+    "esbuild": "^0.19.10",
+    "esbuild-plugin-tsc": "^0.4.0",
     "typescript": "^5.1.6"
-  },
-  "types": "src/types.d.ts"
+  }
 }

@@ -1,7 +1,7 @@
-import Counter from "./Counter.js";
-import FracRange from "./FracRange.js";
-import NullishUtils from "./NullishUtils.js";
-import NumberUtils from "./NumberUtils.js";
+import Counter from "./Counter";
+import FracRange from "./FracRange";
+import NullishUtils from "./NullishUtils";
+import NumberUtils from "./NumberUtils";
 
 module ArrayUtils {
 

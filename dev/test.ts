@@ -1,8 +1,9 @@
-import ArrayUtils from "./ArrayUtils.js";
-import Range from "./Range.js";
+import { ArrayUtils, FracRange } from "../src/index";
 
-const a: frac = 890;
-console.log( a );
+const b: frac = 90;
+const a = new FracRange( 90, 100 );
+console.log( a.hasInRange( 90 ) );
+console.log( ArrayUtils.hasIndex( [0], 0 ));
 
 // enum Relations {
 
