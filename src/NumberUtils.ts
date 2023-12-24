@@ -1,10 +1,13 @@
+import NullishUtils from "./NullishUtils";
+
 class NumberUtils {
 
     public static fracArrayCompare: comparator< frac[] > = ( array1, array2 ) => {
 
         let
             index: int, length: int = Math.max( array1.length, array2.length ),
-            number1: frac = 0, number2: frac = 0
+            undefinedFrac = NullishUtils.makeUndefined< frac >(),
+            number1: frac = undefinedFrac, number2: frac = undefinedFrac
         ;
         for( index = 0; number1 === number2 && index < length; index++ ) {
 

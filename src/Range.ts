@@ -30,4 +30,17 @@ export default class Range< T > {
 
     }
 
+    public intersectsWithRange( range: Range< T > ): boolean {
+
+        const
+            { start: start1, end: end1, includeStart: includeStart1, includeEnd: includeEnd1 } = this,
+            { start: start2, end: end2, includeStart: includeStart2, includeEnd: includeEnd2 } = range
+        ;
+        return (
+            ( start1 < start2 ) ? ( ( end1 < start2 ) || ( includeEnd1 && includeStart2 && end1 == start2 ) )
+            : ( ( start1 > end2 ) || ( includeStart1 && includeEnd2 && start1 == end2 ) )
+        );
+
+    }
+
 }
