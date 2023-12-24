@@ -2,7 +2,7 @@ import NullishUtils from "./NullishUtils";
 
 class NumberUtils {
 
-    public static fracArrayCompare: comparator< frac[] > = ( array1, array2 ) => {
+    public static fracArrayCompare( array1: frac[], array2: frac[] ): frac {
 
         let
             index: int, length: int = Math.max( array1.length, array2.length ),
@@ -17,9 +17,13 @@ class NumberUtils {
         } 
         return this.fracCompare( number1, number2 );
 
-    };
+    }
 
-    public static fracCompare: comparator< frac > = ( number1, number2 ) => ( number1 - number2 );
+    public static fracCompare( number1: frac, number2: frac ): frac {
+
+        return number1 - number2
+
+    };
 
     public static isInteger( number: frac ): boolean {
 
