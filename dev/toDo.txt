@@ -23,7 +23,8 @@ Range
 get length: length
 addLeft( addend ): number
 addMiddle( addend ): number
-addRight( addend ): number
+addRight( addend ): 
+compareRange
 cut( number ): [ left: Range, right: Range ]
 limit( limit ): number
 multiplyLeft( factor ): number

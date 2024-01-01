@@ -14,7 +14,7 @@
     "types": [ "./src/types.d.ts" ]
 
   },
-  "include": [ "src", "dev" ],
+  "include": [ "src", "dev", "index.ts" ],
   "exclude": [ "misc", "node_modules" ]
   
 }

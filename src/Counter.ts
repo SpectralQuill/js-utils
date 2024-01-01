@@ -1,22 +1,22 @@
-import NumberUtils from "./NumberUtils";
+import { NumberUtils } from "./NumberUtils";
 
-export default class Counter {
+export class Counter {
 
-    public count: frac;
+    public count: number;
 
-    constructor( public start: frac = 0, public period: frac = 1 ) {
+    constructor( public start: number = 0, public period: number = 1 ) {
 
         this.count = start;
 
     }
 
-    public backward(): frac {
+    public backward(): number {
 
         return this.period = NumberUtils.toNegative( this.period );
 
     }
 
-    public forward(): frac {
+    public forward(): number {
 
         return this.period = NumberUtils.toPositive( this.period );
 
@@ -34,31 +34,31 @@ export default class Counter {
 
     }
 
-    public next( period: frac = this.period ): frac {
+    public next( period: number = this.period ): number {
 
         return this.count += period;
 
     }
 
-    public reset( start: frac = this.start ): frac {
+    public reset( start: number = this.start ): number {
 
         return this.count = start;
 
     }
 
-    public reverse(): frac {
+    public reverse(): number {
 
         return this.period = NumberUtils.toOpposite( this.period );
 
     }
 
-    public skip( skip: int = 1 ): frac {
+    public skip( skip: int = 1 ): number {
 
         return this.count += this.period * skip;
 
     }
 
-    public * [ Symbol.iterator ](): Generator< [ count: frac, counter: Counter ] > {
+    public * [ Symbol.iterator ](): Generator< [ count: number, counter: Counter ] > {
 
         while( true ) {
 
@@ -69,7 +69,7 @@ export default class Counter {
 
     }
 
-    public toNumber(): frac {
+    public toNumber(): number {
 
         return this.count;
 

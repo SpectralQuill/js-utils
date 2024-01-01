@@ -1,0 +1,20 @@
+a = range1;
+b = range2;
+r = unknown comparison;
+s = compare( a.start, b.start );
+if s < 0: return r = -1;
+if s > 0: return r = +1; // diff start
+if s == 0:
+	if a.includeStart != b.includeStart:
+		if a.includeStart == true: return r = -2;
+		if b.includeStart == true: return r = +2; // same start, diff includeStart
+	if a.includeStart == b.includeStart:
+		e = compare( a.end, b.end );
+		if e < 0: return r = -3;
+		if e > 0: return r = +3; // same start, same includeStart, diff end
+		if e == 0:
+			if a.includeEnd != b.includeEnd:
+				if a.includeEnd == true: return r = +4;
+				if b.includeEnd == true: return r = -4; // same start, same includeStart, same end, diff includeEnd
+			if a.includeEnd == b.includeEnd:
+				return r = 0; // same start, same includeStart, same end, same includeEnd

@@ -1,4 +1,4 @@
-export default class NullishUtils {
+export class NullishUtils {
 
     public static makeUndefined< T >(): T {
 
