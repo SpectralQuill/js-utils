@@ -5,8 +5,8 @@ import { OrderedArray } from "./OrderedArray";
 
 export class MapImage extends Image {
 
-    private readonly xCoordinatePixels: CoordinatePixelArray = new CoordinatePixelArray();
-    private readonly yCoordinatePixels: CoordinatePixelArray = new CoordinatePixelArray();
+    public readonly xCoordinatePixels: CoordinatePixelArray = new CoordinatePixelArray();
+    public readonly yCoordinatePixels: CoordinatePixelArray = new CoordinatePixelArray();
 
     public constructor(
         src: string, public readonly startFromTop: boolean, public readonly startFromLeft: boolean
