@@ -32,3 +32,6 @@ multiplyMiddle( factor ): number
 multiplyRight( factor ): number
 pickNumber(): frac
 toString() -> should account for period
+
+DisjointRangeArray
+// comments in indexToAddElement

@@ -1,21 +1,18 @@
-import { NullishUtils } from "./NullishUtils";
-
 export class NumberUtils {
 
     public static compareNumber( number1: number, number2: number ): number {
 
-        return number1 - number2
+        return number1 - number2;
 
     };
 
     public static compareNumberArray( array1: number[], array2: number[] ): number {
 
         let
-            index: int, length: int = Math.max( array1.length, array2.length ),
-            undefinedFrac = NullishUtils.makeUndefined< number >(),
-            number1: number = undefinedFrac, number2: number = undefinedFrac
+            length: int = Math.max( array1.length, array2.length ),
+            number1: number = 0, number2: number = 0
         ;
-        for( index = 0; number1 == number2 && index < length; index++ ) {
+        for( let index: index = 0; number1 == number2 && index < length; index++ ) {
 
             number1 = array1[ index ] ?? 0;
             number2 = array2[ index ] ?? 0;

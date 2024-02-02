@@ -5,9 +5,9 @@ import { Range } from "./Range";
 
 export class DisjointRangeArray< T > extends OrderedArray< Range< T > > {
 
-    public constructor() {
+    public constructor( ...ranges: Range< T >[] ) {
 
-        super( Range.compareRange );
+        super( Range.compareRange, ...ranges );
 
     }
 
@@ -23,20 +23,23 @@ export class DisjointRangeArray< T > extends OrderedArray< Range< T > > {
 
     }
 
+    // remove comments down there if unneeded
     public override indexToAddElement( range: Range<T> ): index {
 
-        if( !this.isCompatibleWithRange( range ) ) NullishUtils.makeUndefined< index >();
-        let index: index = super.indexToAddElement( range );
+        const undefinedInt: int = NullishUtils.makeUndefined< int >();
+        if( !this.isCompatibleWithRange( range ) ) return undefinedInt;
         const
-            length: int = this.length,
-            undefinedInt: int = NullishUtils.makeUndefined< int >(),
-            left: index = index > 0 ? ( index - 1 ) : length > 1 ? ( length - 1 ) : undefinedInt,
-            right: index = index < length ? index : undefinedInt,
-            intersectsWithLeft: boolean = this[ left ]?.intersectsWithRange( range ) ?? false,
-            intersectsWithRight: boolean = this[ right ]?.intersectsWithRange( range ) ?? false
+            index: index = super.indexToAddElement( range ),
+            // length: int = this.length,
+            // undefinedInt: int = NullishUtils.makeUndefined< int >(),
+            // left: index = ( index > 0 ) ? ( index - 1 ) : ( length > 1 ) ? ( length - 1 ) : undefinedInt,
+            // right: index = ( index < length ) ? index : undefinedInt,
+            leftIndex: index = ArrayUtils.leftIndex( this, index, false, false ),
+            rightIndex: index = index,
+            intersectsWithLeft: boolean = this[ leftIndex ]?.intersectsWithRange( range ) ?? false,
+            intersectsWithRight: boolean = this[ rightIndex ]?.intersectsWithRange( range ) ?? false
         ;
-        index = ( !intersectsWithLeft && !intersectsWithRight ) ? index : undefinedInt;
-        return index;
+        return ( !intersectsWithLeft && !intersectsWithRight ) ? index : undefinedInt;
         
     }
 

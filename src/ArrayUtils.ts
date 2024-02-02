@@ -51,11 +51,8 @@ export class ArrayUtils {
     public static findMatch< T >( array: T[], match?: ArrayUtils.match< T >, start: index = 0 ): T[] {
 
         const found: T[] = [];
-        for( let [ element, index, _, counter ] of ArrayUtils.iterate( array, start ) ) {
-
+        for( let [ element, index, _, counter ] of ArrayUtils.iterate( array, start ) )
             if( match?.( element, index, array, counter ) ?? true ) found.push( element );
-
-        }
         return found;
 
     }
@@ -126,8 +123,9 @@ export class ArrayUtils {
     ): Generator< [ element: T, index: index, array: T[], counter: Counter ] > {
 
         if( ArrayUtils.isEmpty( array ) ) return;
-        let period: int = ( NumberUtils.isNonnegative( start ) ? 1 : -1 ), element: T;
-        start = ArrayUtils.nonnegativeIndex( array, start );
+        const isNonnegative: boolean = NumberUtils.isNonnegative( start );
+        let period: int = ( isNonnegative ? 1 : -1 ), element: T;
+        if( !isNonnegative ) start = ArrayUtils.nonnegativeIndex( array, start );
         const counter: Counter = new Counter( start, period );
         for( let [ index ] of counter ) {
 
@@ -145,6 +143,24 @@ export class ArrayUtils {
         let index: index = array.length - 1;
         if( !nonnegative ) index = ArrayUtils.negativeIndex( array, index );
         return index;
+
+    }
+
+    public static leftIndex< T >(
+        array: T[], index: int, excludeLength: boolean = true,
+        noncircular: boolean = true, nonrepeating: boolean = true, nonnegative: boolean = true
+    ): index {
+
+        const undefinedInt: index = NullishUtils.makeUndefined< index >();
+        if( !ArrayUtils.hasIndex( array, index, excludeLength ) ) return undefinedInt;
+        if( NumberUtils.isNegative( index ) )
+            index = ArrayUtils.nonnegativeIndex( array, index, excludeLength );
+        index = (
+            ( index > 0 ) ? ( index - 1 )
+            : ( !noncircular && ( array.length > 1 || !nonrepeating ) ) ? ArrayUtils.lastIndex( array )
+            : undefinedInt
+        );
+        return ( nonnegative || index == undefined ) ? index : ArrayUtils.negativeIndex( array, index );;
 
     }
 
@@ -175,6 +191,24 @@ export class ArrayUtils {
             NumberUtils.isNonnegative( index ) ? ArrayUtils.negativeIndex( array, index ) :
             ArrayUtils.nonnegativeIndex( array, index )
         );
+
+    }
+
+    public static rightIndex< T >(
+        array: T[], index: int, excludeLength: boolean = true,
+        noncircular: boolean = true, nonrepeating: boolean = true, nonnegative: boolean = true
+    ): index {
+
+        const undefinedInt: index = NullishUtils.makeUndefined< index >();
+        if( !ArrayUtils.hasIndex( array, index, excludeLength ) ) return undefinedInt;
+        if( NumberUtils.isNegative( index ) )
+            index = ArrayUtils.nonnegativeIndex( array, index, excludeLength );
+        index = (
+            ( index < ArrayUtils.lastIndex( array ) ) ? ( index + 1 )
+            : ( !noncircular && ( array.length > 1 || !nonrepeating ) ) ? 0
+            : undefinedInt
+        );
+        return ( nonnegative || index == undefined ) ? index : ArrayUtils.negativeIndex( array, index );
 
     }
 

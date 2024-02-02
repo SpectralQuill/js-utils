@@ -2,9 +2,10 @@ import { ArrayUtils } from "./ArrayUtils";
 
 export class OrderedArray< T > extends Array< T > {
 
-    public constructor( public readonly compare: comparator< T > ) {
+    public constructor( public readonly compare: comparator< T >, ...values: T[] ) {
 
         super();
+        if( !ArrayUtils.isEmpty( values ) ) this.addElements( ...values );
 
     }
 
@@ -18,6 +19,12 @@ export class OrderedArray< T > extends Array< T > {
     public addElements( ...values: T[] ): T[] {
 
         return values.filter( value => !this.addElement( value ) );
+
+    }
+
+    public concat( ...values: ( ConcatArray< T > | T )[] ): OrderedArray< T > {
+
+        return new OrderedArray< T >( this.compare, ...this, ...values.flat() as T[] );
 
     }
 
