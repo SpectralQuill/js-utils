@@ -5,9 +5,9 @@ import { Range } from "./Range";
 
 export class DisjointRangeArray< T > extends OrderedArray< Range< T > > {
 
-    public constructor( ...ranges: Range< T >[] ) {
+    public constructor() {
 
-        super( Range.compareRange, ...ranges );
+        super( Range.compareRange );
 
     }
 

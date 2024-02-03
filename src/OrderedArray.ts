@@ -2,17 +2,16 @@ import { ArrayUtils } from "./ArrayUtils";
 
 export class OrderedArray< T > extends Array< T > {
 
-    public constructor( public readonly compare: comparator< T >, ...values: T[] ) {
+    public constructor( public readonly compare: comparator< T > ) {
 
         super();
-        if( !ArrayUtils.isEmpty( values ) ) this.addElements( ...values );
 
     }
 
     public addElement( value: T ): boolean {
 
         const index: index = this.indexToAddElement( value );
-        return index != undefined ? ArrayUtils.addArray( this, [ value ], index ) : false;
+        return ArrayUtils.addArray( this, [ value ], index );
 
     }
 
@@ -24,7 +23,9 @@ export class OrderedArray< T > extends Array< T > {
 
     public concat( ...values: ( ConcatArray< T > | T )[] ): OrderedArray< T > {
 
-        return new OrderedArray< T >( this.compare, ...this, ...values.flat() as T[] );
+        const array: OrderedArray< T > = new OrderedArray< T >( this.compare );
+        array.addElements( ...this, ...values.flat() as T[] );
+        return array;
 
     }
 

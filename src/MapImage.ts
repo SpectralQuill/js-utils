@@ -106,9 +106,9 @@ export class CoordinatePixel {
 
 export class CoordinatePixelArray extends OrderedArray< CoordinatePixel > {
 
-    public constructor( ...coordinatePixels: CoordinatePixel[] ) {
+    public constructor() {
 
-        super( CoordinatePixel.compareCoordinatePixel, ...coordinatePixels );
+        super( CoordinatePixel.compareCoordinatePixel );
 
     }
 
