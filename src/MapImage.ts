@@ -17,6 +17,28 @@ export class MapImage extends Image {
 
     }
 
+    public async getPercentagePosition(
+        xCoordinate: number, yCoordinate: number, rendered: boolean = true
+    ): Promise< [ string, string ] > {
+
+        return [
+            await this.getXPercentagePosition( xCoordinate ),
+            await this.getYPercentagePosition( yCoordinate )
+        ];
+
+    }
+
+    public async getPixelPosition(
+        xCoordinate: number, yCoordinate: number, rendered: boolean = true
+    ): Promise< [ string, string ] > {
+
+        return [
+            await this.getXPixelPosition( xCoordinate, rendered ),
+            await this.getYPixelPosition( yCoordinate, rendered )
+        ];
+
+    }
+
     public async getPosition(
         xCoordinate: number, yCoordinate: number, rendered: boolean = true
     ): Promise< [ int, int ] > {
@@ -28,6 +50,19 @@ export class MapImage extends Image {
 
     }
 
+    public async getXPercentagePosition( coordinate: number ): Promise< string > {
+
+        const position: int = await this.getXPosition( coordinate, false );
+        return NumberUtils.toPercentageString( position / this.naturalWidth );
+
+    }
+
+    public async getXPixelPosition( coordinate: number, rendered: boolean = true ): Promise< string > {
+
+        return `${ await this.getXPosition( coordinate, rendered ) }px`;
+
+    }
+
     public async getXPosition( coordinate: number, rendered: boolean = true ): Promise< int > {
 
         await this.decode();
@@ -36,6 +71,19 @@ export class MapImage extends Image {
             dilation: number = rendered ? ( width / naturalWidth ) : 1
         ;
         return this.xCoordinatePixels.getPosition( coordinate, dilation );
+
+    }
+
+    public async getYPercentagePosition( coordinate: number ): Promise< string > {
+
+        const position: int = await this.getYPosition( coordinate, false );
+        return NumberUtils.toPercentageString( position / this.naturalHeight );
+
+    }
+
+    public async getYPixelPosition( coordinate: number, rendered: boolean = true ): Promise< string > {
+
+        return `${ await this.getYPosition( coordinate, rendered ) }px`;
 
     }
 

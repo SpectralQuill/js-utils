@@ -62,6 +62,12 @@ export class NumberUtils {
 
     }
 
+    public static toPercentageString( number: number ): string {
+
+        return `${ 100 * number }%`;
+
+    }
+
     public static toPositive( number: number ): number {
 
         return Math.abs( number );
