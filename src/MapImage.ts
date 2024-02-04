@@ -17,59 +17,36 @@ export class MapImage extends Image {
 
     }
 
-    public getPosition( xCoordinate: number, yCoordinate: number ): [ number, number ] {
+    public async getPosition(
+        xCoordinate: number, yCoordinate: number, rendered: boolean = true
+    ): Promise< [ int, int ] > {
 
-        return [ this.getXPosition( xCoordinate ), this.getYPosition( yCoordinate ) ];
+        return [
+            await this.getXPosition( xCoordinate, rendered ),
+            await this.getYPosition( yCoordinate, rendered )
+        ];
 
     }
 
-    public getXPosition( coordinate: number, rendered: boolean = true ): number {
+    public async getXPosition( coordinate: number, rendered: boolean = true ): Promise< int > {
 
-        const
-            { xCoordinatePixels } = this,
-            undefinedNumber = NullishUtils.makeUndefined< number >(),
-            coordinatePixel: CoordinatePixel = new CoordinatePixel( coordinate, undefinedNumber ),
-            index: index = xCoordinatePixels.indexToAddElement( coordinatePixel ),
-            leftIndex: index = ArrayUtils.leftIndex( xCoordinatePixels, index ),
-            rightIndex: index = index,
-            leftCoordinatePixel: CoordinatePixel = xCoordinatePixels[ leftIndex ],
-            rightCoordinatePixel: CoordinatePixel = xCoordinatePixels[ rightIndex ]
-        ;
-        if( leftCoordinatePixel == undefined || rightCoordinatePixel == undefined ) return undefinedNumber;
+        await this.decode();
         const
             { naturalWidth, width } = this,
-            { coordinate: coordinate1, pixel: pixel1, } = leftCoordinatePixel,
-            { coordinate: coordinate2, pixel: pixel2, } = rightCoordinatePixel,
-            percentage: percentage = ( coordinate - coordinate1 ) / ( coordinate2 - coordinate1 ),
-            naturalPosition: int = percentage * ( pixel2 - pixel1 ) + pixel1,
-            renderedPosition: int = width * naturalPosition / naturalWidth
+            dilation: number = rendered ? ( width / naturalWidth ) : 1
         ;
-        return Math.round( rendered ? renderedPosition : naturalPosition );
+        return this.xCoordinatePixels.getPosition( coordinate, dilation );
 
     }
 
-    public getYPosition( coordinate: number, rendered: boolean = true ): number {
+    public async getYPosition( coordinate: number, rendered: boolean = true ): Promise< int > {
 
-        const
-            { yCoordinatePixels } = this,
-            undefinedNumber = NullishUtils.makeUndefined< number >(),
-            coordinatePixel: CoordinatePixel = new CoordinatePixel( coordinate, undefinedNumber ),
-            index: index = yCoordinatePixels.indexToAddElement( coordinatePixel ),
-            leftIndex: index = ArrayUtils.leftIndex( yCoordinatePixels, index ),
-            rightIndex: index = index,
-            leftCoordinatePixel: CoordinatePixel = yCoordinatePixels[ leftIndex ],
-            rightCoordinatePixel: CoordinatePixel = yCoordinatePixels[ rightIndex ]
-        ;
-        if( leftCoordinatePixel == undefined || rightCoordinatePixel == undefined ) return undefinedNumber;
+        await this.decode();
         const
             { naturalHeight, height } = this,
-            { coordinate: coordinate1, pixel: pixel1, } = leftCoordinatePixel,
-            { coordinate: coordinate2, pixel: pixel2, } = rightCoordinatePixel,
-            percentage: percentage = ( coordinate - coordinate1 ) / ( coordinate2 - coordinate1 ),
-            naturalPosition: int = percentage * ( pixel2 - pixel1 ) + pixel1,
-            renderedPosition: int = height * naturalPosition / naturalHeight
+            dilation: number = rendered ? ( height / naturalHeight ) : 1
         ;
-        return Math.round( rendered ? renderedPosition : naturalPosition );
+        return this.yCoordinatePixels.getPosition( coordinate, dilation );
 
     }
 
@@ -121,6 +98,28 @@ export class CoordinatePixelArray extends OrderedArray< CoordinatePixel > {
     public addCoordinates( ...coordinatePixels: CoordinatePixel[] ): CoordinatePixel[] {
 
         return this.addElements( ...coordinatePixels );
+
+    }
+
+    public getPosition( coordinate: number, dilation: percentage = 1 ): int {
+
+        const
+            undefinedNumber = NullishUtils.makeUndefined< number >(),
+            coordinatePixel: CoordinatePixel = new CoordinatePixel( coordinate, undefinedNumber ),
+            index: index = this.indexToAddElement( coordinatePixel ),
+            leftIndex: index = ArrayUtils.leftIndex( this, index ),
+            rightIndex: index = index,
+            leftCoordinatePixel: CoordinatePixel = this[ leftIndex ],
+            rightCoordinatePixel: CoordinatePixel = this[ rightIndex ]
+        ;
+        if( leftCoordinatePixel == undefined || rightCoordinatePixel == undefined ) return undefinedNumber;
+        const
+            { coordinate: coordinate1, pixel: pixel1, } = leftCoordinatePixel,
+            { coordinate: coordinate2, pixel: pixel2, } = rightCoordinatePixel,
+            percentage: percentage = ( coordinate - coordinate1 ) / ( coordinate2 - coordinate1 ),
+            position: int = Math.round( dilation * ( percentage * ( pixel2 - pixel1 ) + pixel1 ) )
+        ;
+        return position;
 
     }
 
