@@ -162,7 +162,7 @@ export class CoordinatePixelArray extends OrderedArray< CoordinatePixel > {
         const
             undefinedNumber = NullishUtils.makeUndefined< number >(),
             coordinatePixel: CoordinatePixel = new CoordinatePixel( coordinate, undefinedNumber ),
-            index: index = this.indexToAddElement( coordinatePixel ),
+            index: index = this.indexToAddElement( coordinatePixel, false ),
             leftIndex: index = ArrayUtils.leftIndex( this, index ),
             rightIndex: index = index,
             leftCoordinatePixel: CoordinatePixel = this[ leftIndex ],
@@ -179,10 +179,13 @@ export class CoordinatePixelArray extends OrderedArray< CoordinatePixel > {
 
     }
 
-    public override indexToAddElement( coordinatePixel: CoordinatePixel ): index {
+    public override indexToAddElement(
+        coordinatePixel: CoordinatePixel, disallowConflicts: boolean = true
+    ): index {
 
+        const index: index = super.indexToAddElement( coordinatePixel )
+        if( !disallowConflicts ) return index;
         const
-            index: index = super.indexToAddElement( coordinatePixel ),
             leftIndex: index = ArrayUtils.leftIndex( this, index ),
             rightIndex: index = index,
             conflictsWithLeft: boolean =
