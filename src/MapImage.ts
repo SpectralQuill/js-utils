@@ -5,15 +5,15 @@ import { OrderedArray } from "./OrderedArray";
 
 export class MapImage extends Image {
 
-    public readonly xCoordinatePixels: CoordinatePixelArray = new CoordinatePixelArray();
-    public readonly yCoordinatePixels: CoordinatePixelArray = new CoordinatePixelArray();
+    public readonly xCoordinatePixels: CoordinatePixelArray;
+    public readonly yCoordinatePixels: CoordinatePixelArray;
 
-    public constructor(
-        src: string, public readonly ascendingTop: boolean, public readonly ascendingLeft: boolean
-    ) {
+    public constructor( src: string, ascendingLeft: boolean = true, ascendingTop: boolean = true ) {
 
         super();
         this.src = src;
+        this.xCoordinatePixels = new CoordinatePixelArray( ascendingLeft );
+        this.yCoordinatePixels = new CoordinatePixelArray( ascendingTop );
 
     }
 
