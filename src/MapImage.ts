@@ -137,7 +137,7 @@ export class CoordinatePixel {
 
 export class CoordinatePixelArray extends OrderedArray< CoordinatePixel > {
 
-    public constructor( ascending: boolean = true ) {
+    public constructor( public readonly ascending: boolean = true ) {
 
         super( ( coordinatePixel1, coordinatePixel2 ) =>
             CoordinatePixel.compareCoordinatePixel( coordinatePixel1, coordinatePixel2, ascending )
@@ -163,16 +163,22 @@ export class CoordinatePixelArray extends OrderedArray< CoordinatePixel > {
             undefinedNumber = NullishUtils.makeUndefined< number >(),
             coordinatePixel: CoordinatePixel = new CoordinatePixel( coordinate, undefinedNumber ),
             index: index = this.indexToAddElement( coordinatePixel, false ),
-            leftIndex: index = ArrayUtils.leftIndex( this, index ),
+            leftIndex: index = ArrayUtils.leftIndex( this, index, false ),
             rightIndex: index = index,
             leftCoordinatePixel: CoordinatePixel = this[ leftIndex ],
             rightCoordinatePixel: CoordinatePixel = this[ rightIndex ]
         ;
-        if( leftCoordinatePixel == undefined || rightCoordinatePixel == undefined ) return undefinedNumber;
+        if( leftCoordinatePixel == undefined ) return undefinedNumber;
+        const equalToLeft: boolean =
+            CoordinatePixel.compareCoordinatePixel( leftCoordinatePixel, coordinatePixel ) == 0
+        ;
+        if( rightCoordinatePixel == undefined && !equalToLeft ) return undefinedNumber;
         const
             { coordinate: coordinate1, pixel: pixel1, } = leftCoordinatePixel,
-            { coordinate: coordinate2, pixel: pixel2, } = rightCoordinatePixel,
-            percentage: percentage = ( coordinate - coordinate1 ) / ( coordinate2 - coordinate1 ),
+            { coordinate: coordinate2, pixel: pixel2, } = rightCoordinatePixel ?? leftCoordinatePixel,
+            percentage: percentage =
+                !equalToLeft ? ( ( coordinate - coordinate1 ) / ( coordinate2 - coordinate1 ) ) : 0
+            ,
             position: int = Math.round( dilation * ( percentage * ( pixel2 - pixel1 ) + pixel1 ) )
         ;
         return position;

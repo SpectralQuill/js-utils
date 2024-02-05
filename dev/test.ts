@@ -24,7 +24,10 @@ import { ArrayUtils, CoordinatePixel, CoordinatePixelArray, DisjointRangeArray, 
 // const array1 = [ 2, 4, 3 ]
 // array1.concat( 3, 5, 5 )
 
-const a = new CoordinatePixelArray();
-a.addElements( new CoordinatePixel( 8, 7 ) )
-console.log( a.toLocaleString() )
+const a = new CoordinatePixelArray( false );
+a.addCoordinates(
+    new CoordinatePixel( 18, 509 ),
+    new CoordinatePixel( 16, 1054 )
+);
+console.log( a.getPosition( 17 ) )
 // a.xCoordinatePixels.addCoordinate( new CoordinatePixel( 118, 477 ) );
