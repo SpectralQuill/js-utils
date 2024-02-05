@@ -9,7 +9,7 @@ export class MapImage extends Image {
     public readonly yCoordinatePixels: CoordinatePixelArray = new CoordinatePixelArray();
 
     public constructor(
-        src: string, public readonly startFromTop: boolean, public readonly startFromLeft: boolean
+        src: string, public readonly ascendingTop: boolean, public readonly ascendingLeft: boolean
     ) {
 
         super();
@@ -18,7 +18,7 @@ export class MapImage extends Image {
     }
 
     public async getPercentagePosition(
-        xCoordinate: number, yCoordinate: number, rendered: boolean = true
+        xCoordinate: number, yCoordinate: number
     ): Promise< [ string, string ] > {
 
         return [
@@ -103,10 +103,16 @@ export class MapImage extends Image {
 export class CoordinatePixel {
 
     public static compareCoordinatePixel(
-        coordinatePixel1: CoordinatePixel, coordinatePixel2: CoordinatePixel
+        coordinatePixel1: CoordinatePixel, coordinatePixel2: CoordinatePixel, ascending: boolean = true
     ) {
 
-        return NumberUtils.compareNumber( coordinatePixel1.coordinate, coordinatePixel2.coordinate );
+        const
+            { coordinate: coordinate1 } = coordinatePixel1, { coordinate: coordinate2 } = coordinatePixel2
+        ;
+        return NumberUtils.compareNumber(
+            ascending ? coordinate1 : coordinate2,
+            ascending ? coordinate2 : coordinate1
+        );
 
     }
 
@@ -119,10 +125,10 @@ export class CoordinatePixel {
             pixelComparison: number = NumberUtils.compareNumber( this.pixel, coordinatePixel.pixel )
         ;
         return (
-            ( isNaN( coordinateComparison ) || isNaN( pixelComparison ) ) ? false :
-            ( coordinateComparison > 0 ) ? ( pixelComparison >= 0 ) :
-            ( coordinateComparison < 0 ) ? ( pixelComparison <= 0 ) :
-            true
+            ( isNaN( coordinateComparison ) || isNaN( pixelComparison ) ) ? false
+            : ( coordinateComparison > 0 ) ? ( pixelComparison >= 0 )
+            : ( coordinateComparison < 0 ) ? ( pixelComparison <= 0 )
+            : true
         );
 
     }
@@ -131,9 +137,11 @@ export class CoordinatePixel {
 
 export class CoordinatePixelArray extends OrderedArray< CoordinatePixel > {
 
-    public constructor() {
+    public constructor( ascending: boolean = true ) {
 
-        super( CoordinatePixel.compareCoordinatePixel );
+        super( ( coordinatePixel1, coordinatePixel2 ) =>
+            CoordinatePixel.compareCoordinatePixel( coordinatePixel1, coordinatePixel2, ascending )
+        );
 
     }
 
