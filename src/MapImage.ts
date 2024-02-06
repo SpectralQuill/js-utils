@@ -19,7 +19,7 @@ export class MapImage extends Image {
 
     public async getPercentagePosition(
         xCoordinate: number, yCoordinate: number
-    ): Promise< [ string, string ] > {
+    ): Promise< [ percentage, percentage ] > {
 
         return [
             await this.getXPercentagePosition( xCoordinate ),
@@ -30,7 +30,7 @@ export class MapImage extends Image {
 
     public async getPixelPosition(
         xCoordinate: number, yCoordinate: number, rendered: boolean = true
-    ): Promise< [ string, string ] > {
+    ): Promise< [ int, int ] > {
 
         return [
             await this.getXPixelPosition( xCoordinate, rendered ),
@@ -39,31 +39,13 @@ export class MapImage extends Image {
 
     }
 
-    public async getPosition(
-        xCoordinate: number, yCoordinate: number, rendered: boolean = true
-    ): Promise< [ int, int ] > {
+    public async getXPercentagePosition( coordinate: number ): Promise< percentage > {
 
-        return [
-            await this.getXPosition( xCoordinate, rendered ),
-            await this.getYPosition( yCoordinate, rendered )
-        ];
+        return ( await this.getXPixelPosition( coordinate, false ) ) / this.naturalWidth;
 
     }
 
-    public async getXPercentagePosition( coordinate: number ): Promise< string > {
-
-        const position: int = await this.getXPosition( coordinate, false );
-        return NumberUtils.toPercentageString( position / this.naturalWidth );
-
-    }
-
-    public async getXPixelPosition( coordinate: number, rendered: boolean = true ): Promise< string > {
-
-        return `${ await this.getXPosition( coordinate, rendered ) }px`;
-
-    }
-
-    public async getXPosition( coordinate: number, rendered: boolean = true ): Promise< int > {
+    public async getXPixelPosition( coordinate: number, rendered: boolean = true ): Promise< int > {
 
         await this.decode();
         const
@@ -74,20 +56,13 @@ export class MapImage extends Image {
 
     }
 
-    public async getYPercentagePosition( coordinate: number ): Promise< string > {
+    public async getYPercentagePosition( coordinate: number ): Promise< percentage > {
 
-        const position: int = await this.getYPosition( coordinate, false );
-        return NumberUtils.toPercentageString( position / this.naturalHeight );
-
-    }
-
-    public async getYPixelPosition( coordinate: number, rendered: boolean = true ): Promise< string > {
-
-        return `${ await this.getYPosition( coordinate, rendered ) }px`;
+        return ( await this.getYPixelPosition( coordinate, false ) ) / this.naturalHeight;
 
     }
 
-    public async getYPosition( coordinate: number, rendered: boolean = true ): Promise< int > {
+    public async getYPixelPosition( coordinate: number, rendered: boolean = true ): Promise< int > {
 
         await this.decode();
         const
@@ -145,13 +120,13 @@ export class CoordinatePixelArray extends OrderedArray< CoordinatePixel > {
 
     }
 
-    public addCoordinate( coordinatePixel: CoordinatePixel ): boolean {
+    public addCoordinatePixel( coordinatePixel: CoordinatePixel ): boolean {
 
         return this.addElement( coordinatePixel );
 
     }
 
-    public addCoordinates( ...coordinatePixels: CoordinatePixel[] ): CoordinatePixel[] {
+    public addCoordinatePixels( ...coordinatePixels: CoordinatePixel[] ): CoordinatePixel[] {
 
         return this.addElements( ...coordinatePixels );
 
