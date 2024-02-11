@@ -1,9 +1,10 @@
 import { ArrayUtils } from "./ArrayUtils";
+import { Keyframe, KeyframeArray } from "./Keyframe";
 import { NullishUtils } from "./NullishUtils";
 import { NumberUtils } from "./NumberUtils";
 import { OrderedArray } from "./OrderedArray";
 
-export class MapImage extends Image {
+export class MapImageOld extends Image {
 
     public readonly xCoordinatePixels: CoordinatePixelArray;
     public readonly yCoordinatePixels: CoordinatePixelArray;
@@ -81,9 +82,7 @@ export class CoordinatePixel {
         coordinatePixel1: CoordinatePixel, coordinatePixel2: CoordinatePixel, ascending: boolean = true
     ) {
 
-        const
-            { coordinate: coordinate1 } = coordinatePixel1, { coordinate: coordinate2 } = coordinatePixel2
-        ;
+        const { coordinate: coordinate1 } = coordinatePixel1, { coordinate: coordinate2 } = coordinatePixel2;
         return NumberUtils.compareNumber(
             ascending ? coordinate1 : coordinate2,
             ascending ? coordinate2 : coordinate1
@@ -177,6 +176,156 @@ export class CoordinatePixelArray extends OrderedArray< CoordinatePixel > {
         ;
         return ( !conflictsWithLeft && !conflictsWithRight ) ? index : NullishUtils.makeUndefined< int >();
 
+    }
+
+}
+
+export class MapImage extends Image {
+
+    public readonly coordinateRefsX;
+    public readonly coordinateRefsY;
+
+    public constructor( src: string, ascendingLeft: boolean, ascendingTop: boolean ) {
+
+        super();
+        this.src = src;
+        this.coordinateRefsX = new CoordinateRefArray( ascendingLeft );
+        this.coordinateRefsY = new CoordinateRefArray( ascendingTop );
+
+    }
+
+    public get dilationX(): percentage {
+
+        return this.width / this.naturalWidth;
+
+    }
+
+    public get dilationY(): percentage {
+
+        return this.width / this.naturalWidth;
+
+    }
+
+    public coordinatesOfPercentages( percentageX: number, percentageY: number ): [ number, number ] {
+
+        return [
+            this.coordinateRefsX.coordinateOfPercentage( percentageX ),
+            this.coordinateRefsY.coordinateOfPercentage( percentageY )
+        ];
+
+    }
+
+    public percentagesOfCoordinates(
+        coordinateX: number, coordinateY: number
+    ): [ percentage, percentage ] {
+
+        return [
+            this.coordinateRefsX.percentageOfCoordinate( coordinateX ),
+            this.coordinateRefsY.percentageOfCoordinate( coordinateY )
+        ];
+
+    }
+
+    public pixelsOfCoordinates(
+        coordinateX: number, coordinateY: number, dilate: boolean = true
+    ): [ int, int ] {
+
+        const { coordinateRefsX, coordinateRefsY, dilationX, dilationY } = this;
+        coordinateRefsX.dilate( dilationX );
+        coordinateRefsY.dilate( dilationY );
+        return [
+            coordinateRefsX.pixelOfCoordinate( coordinateX, dilate ),
+            coordinateRefsY.pixelOfCoordinate( coordinateY, dilate )
+        ];
+
+    }
+
+    public pixelsOfPercentages(
+        percentageX: percentage, percentageY: percentage, dilate: boolean = true
+    ): [ int, int ] {
+
+        const { coordinateRefsX, coordinateRefsY, dilationX, dilationY } = this;
+        coordinateRefsX.dilate( dilationX );
+        coordinateRefsY.dilate( dilationY );
+        return [
+            coordinateRefsX.pixelOfPercentage( percentageX, dilate ),
+            coordinateRefsY.pixelOfPercentage( percentageY, dilate )
+        ];
+
+    }
+
+}
+
+export class CoordinateRef extends Keyframe {
+
+    constructor( coordinate: number, pixel: int ) {
+
+        super( coordinate, pixel );
+
+    }
+
+    public get coordinate(): number {
+
+        return this.index;
+
+    }
+
+    public get pixel(): int {
+
+        return this.value;
+
+    }
+
+}
+
+export class CoordinateRefArray extends KeyframeArray< CoordinateRef > {
+
+    constructor( ascending: boolean = true ) {
+
+        super( ascending );
+
+    }
+
+    public addCoordinateRef( coordinateRef: CoordinateRef ): boolean {
+
+        return this.addKeyframe( coordinateRef );
+
+    }
+
+    public addCoordinateRefs( ...coordinateRefs: CoordinateRef[] ): CoordinateRef[] {
+
+        return this.addKeyframes( ...coordinateRefs );
+
+    }
+
+    public coordinateOfPercentage( percentage: percentage ): number {
+
+        return this.indexOfPercentage( percentage );
+
+    }
+
+    public percentageOfCoordinate( coordinate: number ): percentage {
+
+        return this.percentageOfIndex( coordinate );
+
+    }
+
+    public pixelOfCoordinate( coordinate: number, dilate: boolean = true ): int {
+
+        return this.valueOfIndex( coordinate, dilate );
+
+    }
+
+    public pixelOfPercentage( percentage: percentage, dilate: boolean = true ): percentage {
+
+        return this.valueOfPercentage( percentage, dilate );
+
+    }
+
+    public override valueOfIndex( index: number, dilate: boolean = true ): int {
+
+        return Math.round( super.valueOfIndex( index, dilate ) );
+        
     }
 
 }

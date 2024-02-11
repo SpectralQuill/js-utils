@@ -1,5 +1,11 @@
 export class NumberUtils {
 
+    public static average( ...numbers: number[] ) {
+
+        return NumberUtils.sum( ...numbers ) / numbers.length;
+
+    }
+
     public static compareNumber( number1: number, number2: number ): number {
 
         return number1 - number2;
@@ -19,6 +25,12 @@ export class NumberUtils {
 
         } 
         return NumberUtils.compareNumber( number1, number2 );
+
+    }
+
+    public static distance( number1: number, number2: number ): number {
+
+        return Math.abs( number1 - number2 );
 
     }
 
@@ -43,6 +55,12 @@ export class NumberUtils {
     public static isPositive( number: number ): boolean {
 
         return number > 0;
+
+    }
+
+    public static sum( ...numbers: number[] ): number {
+
+        return numbers.reduce( ( sum, number ) => ( sum + number ), 0 );
 
     }
 

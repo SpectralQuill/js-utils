@@ -23,23 +23,17 @@ export class DisjointRangeArray< T > extends OrderedArray< Range< T > > {
 
     }
 
-    // remove comments down there if unneeded
     public override indexToAddElement( range: Range<T> ): index {
 
         const undefinedInt: int = NullishUtils.makeUndefined< int >();
         if( !this.isCompatibleWithRange( range ) ) return undefinedInt;
         const
-            index: index = super.indexToAddElement( range ),
-            // length: int = this.length,
-            // undefinedInt: int = NullishUtils.makeUndefined< int >(),
-            // left: index = ( index > 0 ) ? ( index - 1 ) : ( length > 1 ) ? ( length - 1 ) : undefinedInt,
-            // right: index = ( index < length ) ? index : undefinedInt,
-            leftIndex: index = ArrayUtils.leftIndex( this, index, false, false ),
-            rightIndex: index = index,
-            intersectsWithLeft: boolean = this[ leftIndex ]?.intersectsWithRange( range ) ?? false,
-            intersectsWithRight: boolean = this[ rightIndex ]?.intersectsWithRange( range ) ?? false
+            indexToAddRight: index = super.indexToAddElement( range ),
+            indexToAddLeft: index = ArrayUtils.leftIndex( this, indexToAddRight, false, false ),
+            intersectsWithLeft: boolean = this[ indexToAddLeft ]?.intersectsWithRange( range ) ?? false,
+            intersectsWithRight: boolean = this[ indexToAddRight ]?.intersectsWithRange( range ) ?? false
         ;
-        return ( !intersectsWithLeft && !intersectsWithRight ) ? index : undefinedInt;
+        return ( !intersectsWithLeft && !intersectsWithRight ) ? indexToAddRight : undefinedInt;
         
     }
 

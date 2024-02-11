@@ -48,6 +48,12 @@ export class ArrayUtils {
 
     }
 
+    public static firstElement< T >( array: T[] ): T {
+
+        return array[ 0 ];
+
+    }
+
     public static findMatch< T >( array: T[], match?: ArrayUtils.match< T >, start: index = 0 ): T[] {
 
         const found: T[] = [];
@@ -134,6 +140,12 @@ export class ArrayUtils {
             yield [ element, index, array, counter ];
 
         }
+
+    }
+
+    public static lastElement< T >( array: T[] ): T {
+
+        return array[ ArrayUtils.lastIndex( array ) ];
 
     }
 

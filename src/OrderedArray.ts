@@ -2,9 +2,17 @@ import { ArrayUtils } from "./ArrayUtils";
 
 export class OrderedArray< T > extends Array< T > {
 
-    public constructor( public readonly compare: comparator< T > ) {
+    public constructor(
+        public readonly compare: comparator< T >, public readonly isForward: boolean = true
+    ) {
 
         super();
+
+    }
+
+    public get isBackward(): boolean {
+
+        return !this.isForward;
 
     }
 
@@ -38,8 +46,8 @@ export class OrderedArray< T > extends Array< T > {
         ;
         while( start <= end ) {
 
-            index = Math.ceil( ( end - start ) / 2 ) + start;
-            comparison = this.compare( value, this[ index ] );
+            index = start + Math.ceil( ( end - start ) / 2 );
+            comparison = ( this.isForward ? 1 : -1 ) * this.compare( value, this[ index ] );
             comparison >= 0 ? ( start = index + 1 ) : ( end = index - 1 );
 
         }
